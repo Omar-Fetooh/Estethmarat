@@ -1,8 +1,9 @@
 import slugify from "slugify";
 import bcrypt from "bcrypt";
 import { nanoid } from "nanoid";
-import { cloudinaryConfig, ErrorClass } from "../../Utils/index.js";
+import { cloudinaryConfig } from "../../Utils/index.js";
 import { Organization } from "../../../DB/models/index.js";
+import { AppError } from "../../Utils/AppError.js";
 
 export const addOrganization = async (req, res, next) => {
   const {
@@ -25,7 +26,7 @@ export const addOrganization = async (req, res, next) => {
   const slug = slugify(name, { replacement: "_", lower: "true" });
 
   if (!req.file) {
-    return next(new ErrorClass("please upload a Logo Image", 400));
+    return next(new AppError("please upload a Logo Image", 400));
   }
 
   if (
@@ -37,12 +38,12 @@ export const addOrganization = async (req, res, next) => {
     !description ||
     !location
   ) {
-    return next(new ErrorClass("All Required fields must be provided.", 400));
+    return next(new AppError("All Required fields must be provided.", 400));
   }
 
   const organizationExists = await Organization.findOne({ name });
   if (organizationExists)
-    return next(new ErrorClass("This name already exists", 400));
+    return next(new AppError("This name already exists", 400));
 
   const customId = nanoid(4);
   const { secure_url, public_id } = await cloudinaryConfig().uploader.upload(
@@ -98,7 +99,7 @@ export const getOrganizationById = async (req, res, next) => {
   const organization = await Organization.findById(organizationId);
 
   if (!organization) {
-    return next(new ErrorClass("Sorry organization not found", 404));
+    return next(new AppError("Sorry organization not found", 404));
   }
 
   res
@@ -112,7 +113,7 @@ export const deleteOrganization = async (req, res, next) => {
   const organization = await Organization.findById(organizationId);
 
   if (!organization) {
-    return next(new ErrorClass("Sorry organization not found", 404));
+    return next(new AppError("Sorry organization not found", 404));
   }
 
   await cloudinaryConfig().api.delete_resources_by_prefix(
@@ -141,7 +142,7 @@ export const updateOrganization = async (req, res, next) => {
   const organization = await Organization.findById(organizationId);
 
   if (!organization) {
-    return next(new ErrorClass("Sorry organization not found", 404));
+    return next(new AppError("Sorry organization not found", 404));
   }
   const {
     name,
@@ -163,7 +164,7 @@ export const updateOrganization = async (req, res, next) => {
   if (name) {
     const isNameDuplicated = await Organization.findOne({ name });
     if (isNameDuplicated) {
-      return next(new ErrorClass("sorry the new name is duplicated", 400));
+      return next(new AppError("sorry the new name is duplicated", 400));
     }
 
     const slug = slugify(name, { replacement: "_", lower: true });

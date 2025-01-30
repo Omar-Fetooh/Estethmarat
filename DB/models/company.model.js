@@ -1,6 +1,7 @@
-const mongoose = require("mongoose");
-const validator = require("validator");
-const bcrypt = require("bcryptjs");
+import mongoose from "mongoose";
+import validator from "validator";
+import bcrypt from "bcryptjs";
+
 const companySchema = new mongoose.Schema({
   name: {
     type: String,
@@ -225,5 +226,4 @@ companySchema.pre("save", async function (next) {
   this.passwordConfirm = undefined;
   next();
 });
-const Company = mongoose.model("Company", companySchema);
-module.exports = Company;
+export const Company = mongoose.model("Company", companySchema);

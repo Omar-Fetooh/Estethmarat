@@ -1,11 +1,11 @@
-import { ErrorClass } from "../Utils/index.js";
+import { AppError } from "../Utils/index.js";
 
 export const errorHandler = (API) => {
   return async (req, res, next) => {
     API(req, res, next)?.catch((err) => {
       console.log("Error in async handler scope");
       next(
-        new ErrorClass(
+        new AppError(
           "Internal Server Error",
           { status: 400 },
           err.message,
