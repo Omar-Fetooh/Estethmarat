@@ -154,7 +154,6 @@ const investorSchema = new mongoose.Schema(
 investorSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   this.password = await bcryptjs.hash(this.password, 12);
-  console.log(this.password);
   this.passwordConfirm = undefined;
   next();
 });

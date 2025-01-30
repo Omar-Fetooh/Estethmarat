@@ -21,7 +21,7 @@ organizationRouter.post(
   errorHandler(addOrganization)
 );
 
-organizationRouter.get("/", errorHandler(getAllOrganizations));
+organizationRouter.get("/", getAllOrganizations);
 organizationRouter.get("/:organizationId", errorHandler(getOrganizationById));
 
 organizationRouter.delete("/:organizationId", errorHandler(deleteOrganization));
