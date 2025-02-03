@@ -5,15 +5,6 @@ export const errorHandler = (API) => {
     API(req, res, next)?.catch((err) => {
       console.log("Error in async handler scope");
       next(err);
-
-      // next(
-      //   new AppError(
-      //     "Internal Server Error",
-      //     { status: 400 },
-      //     err.message,
-      //     err.stack
-      //   )
-      // );
     });
   };
 };
