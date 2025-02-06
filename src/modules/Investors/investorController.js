@@ -1,17 +1,24 @@
-import { Investor } from "../../../DB/models/index.js";
-import { AppError } from "../../Utils/AppError.js";
+import jwt from 'jsonwebtoken';
+import { Investor } from '../../../DB/models/index.js';
+import { AppError } from '../../Utils/AppError.js';
+import { createTokenAndSendCookie } from './../authController.js';
 
-import { errorHandler } from "../../middlewares/error-handling.middleware.js";
+import { errorHandler } from '../../middlewares/error-handling.middleware.js';
 
 // investor register
 export const register = errorHandler(async (req, res, next) => {
+  // register new investor
   const newInvestor = await Investor.create(req.body);
+  // create token
+  const token = createTokenAndSendCookie(newInvestor._id, res);
   // to prevent send password in response
   newInvestor.password = undefined;
+  // send response
   res.status(201).json({
-    status: "success",
+    status: 'success',
     data: {
       newInvestor,
+      token,
     },
   });
 });
@@ -20,7 +27,7 @@ export const register = errorHandler(async (req, res, next) => {
 export const getAllInvestors = errorHandler(async (req, res, next) => {
   const investors = await Investor.find();
   res.status(200).json({
-    status: "success",
+    status: 'success',
     result: investors.length,
     data: {
       investors,
@@ -36,7 +43,7 @@ export const getInvestor = errorHandler(async (req, res, next) => {
       new AppError(`there in no investor with that id (${req.params.id})`, 404)
     );
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: {
       investor,
     },
@@ -59,7 +66,7 @@ export const updateInvestor = errorHandler(async (req, res, next) => {
     }
   );
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: {
       updatedInvestor,
     },
@@ -75,7 +82,7 @@ export const deleteInvestor = errorHandler(async (req, res, next) => {
     );
   await Investor.findByIdAndDelete(req.params.id);
   res.status(204).json({
-    status: "success",
+    status: 'success',
     data: null,
   });
 });

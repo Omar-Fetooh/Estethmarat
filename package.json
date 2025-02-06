@@ -4,8 +4,12 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+<<<<<<< HEAD
     "start:dev": "nodemon index.js",
     "start:pro": "NODE_ENV=production nodemon index.js"
+=======
+    "start": "nodemon index.js"
+>>>>>>> 56f5a82cb68da8f37ce1d757c0d834498815af40
   },
   "keywords": [],
   "author": "",

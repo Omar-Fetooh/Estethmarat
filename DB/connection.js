@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 // const DB = process.env.DATABASE_CONNECTION.replace(
 //   "<db_password>",
@@ -9,10 +9,10 @@ export const db_connection = async () => {
   await mongoose
     .connect(process.env.CONNEXTION_DATABASE)
     .then(() => {
-      console.log("Database connected successfully ✅");
+      console.log('Database connected successfully ✅');
     })
     .catch((error) => {
-      console.log("Error in database connection ", error.message);
+      console.log('Error in database connection ', error.message);
     });
 };
 
