@@ -7,26 +7,19 @@ import db_connection from "./DB/connection.js";
 import { globalMiddleware } from "./src/middlewares/errorController.js";
 import { AppError } from "./src/Utils/AppError.js";
 import { globalResponse } from "./src/middlewares/error-handling.middleware.js";
-
-config();
+import cookieParser from "cookie-parser";
+config({ path: "./config.env" });
 db_connection();
 
 const app = express();
-const port = process.env.PORT || 5000;
-
-app.use(
-  express
-    .json
-    //   {
-    //   limit: "10kb",
-    // }
-    ()
-);
-
+const port = 3000 || process.env.PORT;
+// this middleware so i can read the body of request
+app.use(express.json());
+// this middleware so i can read or parse the cookies
+app.use(cookieParser());
 app.use("/api/v1/organizations", router.organizationRouter);
 app.use("/api/v1/investors", router.investorRouter);
 app.use("/api/v1/companies", router.companyRouter);
-
 app.all("*", (req, res, next) => {
   next(new AppError(`${req.originalUrl} Not found`, 404));
 });
