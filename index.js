@@ -9,7 +9,8 @@ import { globalMiddleware } from './src/middlewares/errorController.js';
 import { AppError } from './src/Utils/AppError.js';
 import { globalResponse } from './src/middlewares/error-handling.middleware.js';
 
-config({ path: './config.env' });
+// config({ path: './config.env' });
+config();
 db_connection();
 
 const app = express();
@@ -21,10 +22,10 @@ app.use(express.json({ limit: '10kb' }));
 app.use(cookieParser());
 
 app.use('/api/v1/organizations', router.organizationRouter);
-app.use('/api/v1/investors', router.investorRouter);
+// app.use('/api/v1/investors', router.investorRouter);
 app.use('/api/v1/companies', router.companyRouter);
+app.use('/api/v1/posts', router.postRouter);
 // app.use(`/api/v1/auth`, router.authRouter);
-
 
 app.all('*', (req, res, next) => {
   next(new AppError(`${req.originalUrl} Not found`, 404));

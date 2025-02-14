@@ -20,10 +20,12 @@ const postSchema = new Schema(
     attachedImage: {
       secure_url: {
         type: String,
+        required: false,
       },
       public_id: {
         type: String,
         unique: true,
+        required: false,
       },
     },
   },
