@@ -23,8 +23,9 @@ app.use(cookieParser());
 app.use('/api/v1/organizations', router.organizationRouter);
 app.use('/api/v1/investors', router.investorRouter);
 app.use('/api/v1/companies', router.companyRouter);
+app.use('/api/v1/consultations', router.consultationRouter);
+app.use('/api/v1/questions', router.questionRouter);
 // app.use(`/api/v1/auth`, router.authRouter);
-
 
 app.all('*', (req, res, next) => {
   next(new AppError(`${req.originalUrl} Not found`, 404));

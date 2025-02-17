@@ -4,7 +4,7 @@ import {
   forgotPassword,
   resetPassword,
   logout,
-} from './../authController.js';
+} from './../auth/authController.js';
 
 import {
   register,

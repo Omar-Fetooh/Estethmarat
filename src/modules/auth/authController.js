@@ -1,9 +1,10 @@
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
-import { errorHandler } from '../middlewares/index.js';
-import { AppError } from '../Utils/index.js';
-import { Investor } from '../../DB/models/index.js';
-import { sendEmail } from './../Utils/sendEmail.js';
+import { errorHandler } from '../../middlewares/error-handling.middleware.js';
+import { AppError } from '../../Utils/AppError.js';
+// import { Investor } from '../../DB/models/index.js';
+// import { sendEmail } from './../Utils/sendEmail.js';
+import { sendEmail } from './../../Utils/sendEmail.js';
 
 export const createTokenAndSendCookie = (id, res) => {
   // create token

@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { Investor } from '../../../DB/models/index.js';
 import { AppError } from '../../Utils/AppError.js';
-import { createTokenAndSendCookie } from './../authController.js';
+import { createTokenAndSendCookie } from '../auth/authController.js';
 
 import { errorHandler } from '../../middlewares/error-handling.middleware.js';
 
