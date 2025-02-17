@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import validator from "validator";
 import bcrypt from "bcryptjs";
-import crypto from "crypto";
+
 const companySchema = new mongoose.Schema({
   name: {
     type: String,
@@ -18,7 +18,7 @@ const companySchema = new mongoose.Schema({
     ],
     min: 0,
     default: 7,
-  }, 
+  },
   businessStage: {
     type: String,
     required: [true, "Please enter the stage for your company!"],
@@ -216,9 +216,6 @@ const companySchema = new mongoose.Schema({
     required: [true, "Enter the name of the company"],
     trim: true,
   },
-  passwordResetToken: String,
-  passwordResetExpires: Date,
-  PasswordChangedAt: Date,
 });
 
 // pre save hock for encryption password before saving into database
@@ -229,28 +226,4 @@ companySchema.pre("save", async function (next) {
   this.passwordConfirm = undefined;
   next();
 });
-companySchema.pre("save", function (next) {
-  if (!this.isModified("password") || this.isNew) return next();
-  this.PasswordChangedAt = Date.now() - 1000;
-  next();
-});
-// compare two password with each other
-
-companySchema.methods.compareTwoPasswords = async function (
-  candidatePassword,
-  originalPassword
-) {
-  return await bcrypt.compare(candidatePassword, originalPassword);
-};
-// create password reset token and make expiration date for it
-companySchema.methods.createPasswordResetToken = async function () {
-  const resetToken = crypto.randomBytes(32).toString("hex");
-  this.passwordResetToken = crypto
-    .createHash("sha256")
-    .update(resetToken)
-    .digest("hex");
-  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
-  await this.save({ validateBeforeSave: false });
-  return resetToken;
-};
 export const Company = mongoose.model("Company", companySchema);

@@ -1,8 +1,8 @@
 import { Company } from "../../../DB/models/index.js";
 import { AppError } from "../../Utils/AppError.js";
-import { createJwtAndSendCookie } from "../authController.js";
+
 import { errorHandler } from "../../middlewares/error-handling.middleware.js";
-import jwt from "jsonwebtoken";
+
 export const getAllCompanies = errorHandler(async (req, res, next) => {
   const companies = await Company.find();
   res.status(200).json({
@@ -10,19 +10,16 @@ export const getAllCompanies = errorHandler(async (req, res, next) => {
     results: companies.length,
     data: {
       companies,
-      
     },
   });
 });
 export const createCompany = errorHandler(async (req, res, next) => {
   const newCompany = await Company.create(req.body);
   newCompany.password = undefined;
-  const token = createJwtAndSendCookie(res, newCompany);
   res.status(201).json({
     status: "success",
     data: {
       company: newCompany,
-      token,
     },
   });
 });
