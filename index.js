@@ -25,7 +25,7 @@ app.use('/api/v1/organizations', router.organizationRouter);
 // app.use('/api/v1/investors', router.investorRouter);
 app.use('/api/v1/companies', router.companyRouter);
 app.use('/api/v1/posts', router.postRouter);
-// app.use(`/api/v1/auth`, router.authRouter);
+app.use(`/api/v1/auth`, router.authRouter);
 app.use('/api/v1/reviews', router.reviewRouter);
 app.use('/api/v1/donations', router.donationRouter);
 

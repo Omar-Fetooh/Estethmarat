@@ -19,7 +19,7 @@ export const organizationRouter = Router();
 organizationRouter.post(
   '/add',
   multerHost({ allowedExtensions: extensions.Images }).single('logoImage'),
-  auth(),
+  // auth(),
   errorHandler(addOrganization)
 );
 
