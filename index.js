@@ -27,6 +27,7 @@ app.use('/api/v1/companies', router.companyRouter);
 app.use('/api/v1/posts', router.postRouter);
 // app.use(`/api/v1/auth`, router.authRouter);
 app.use('/api/v1/reviews', router.reviewRouter);
+app.use('/api/v1/donations', router.donationRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`${req.originalUrl} Not found`, 404));

@@ -17,6 +17,7 @@ const donationSchema = new Schema(
     amount: {
       type: Number,
       required: [true, 'amount is required'],
+      min: [1, 'Donation amount must be at least 1'],
     },
   },
   { timestamps: true }
