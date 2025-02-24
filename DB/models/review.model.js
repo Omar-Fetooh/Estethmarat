@@ -34,4 +34,6 @@ const reviewSchema = new Schema(
   { timestamps: true }
 );
 
+// reviewSchema.index({ reviewerId: 1, company: 1 }, { unique: true }); // to ensure that every investor can review only once
+
 export const Review = mongoose.models.Review || model('Review', reviewSchema);
