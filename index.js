@@ -21,13 +21,19 @@ app.use(express.json({ limit: '10kb' }));
 // parse cookie
 app.use(cookieParser());
 
+app.use('/api/v1/auth', router.authRouter);
 app.use('/api/v1/organizations', router.organizationRouter);
 // app.use('/api/v1/investors', router.investorRouter);
 app.use('/api/v1/companies', router.companyRouter);
+<<<<<<< HEAD
 app.use('/api/v1/posts', router.postRouter);
 app.use(`/api/v1/auth`, router.authRouter);
 app.use('/api/v1/reviews', router.reviewRouter);
 app.use('/api/v1/donations', router.donationRouter);
+=======
+app.use('/api/v1/consultations', router.consultationRouter);
+app.use('/api/v1/questions', router.questionRouter);
+>>>>>>> 47367c249b182e72b7d48976f3fe8714f75a2007
 
 app.all('*', (req, res, next) => {
   next(new AppError(`${req.originalUrl} Not found`, 404));

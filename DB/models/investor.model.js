@@ -165,7 +165,7 @@ investorSchema.pre('save', async function (next) {
 
 // change passwordChangeAt properity
 investorSchema.pre('save', function (next) {
-  if (!this.isModified('password') || !this.isNew) return next();
+  if (!this.isModified('password') || this.isNew) return next();
   this.passwordChangedAt = Date.now() - 1000;
   next();
 });
@@ -188,4 +188,17 @@ investorSchema.methods.createPasswordResetToken = function () {
   this.passwordResetTokenExpires = Date.now() + 10 * 1000 * 60;
   return resetToken;
 };
+
+// instance method to check if password change time greater than time for creating token
+investorSchema.methods.passwordChangeAfter = function (issuedTimeStamp) {
+  if (this.passwordChangedAt) {
+    const passwordChangedAtSeconds = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
+    return passwordChangedAtSeconds > issuedTimeStamp;
+  }
+  return false;
+};
+
 export const Investor = mongoose.model('Investor', investorSchema);

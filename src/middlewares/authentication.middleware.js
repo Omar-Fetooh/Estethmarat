@@ -18,15 +18,15 @@ export const auth = () => {
     const originalToken = token.split(" ")[1];
 
     const data = jwt.verify(originalToken, process.env.LOGIN_SECRET);
-    if (!data?.userId) {
+    if (!data?.id) {
       return next(new AppError("Invalid Token Payload", 400));
     }
 
     // Try to find the user in parallel
     const authUser = await Promise.any([
-      Company.findById(data.userId),
-      Investor.findById(data.userId),
-      Organization.findById(data.userId),
+      Company.findById(data.id),
+      Investor.findById(data.id),
+      Organization.findById(data.id),
     ]);
 
     req.authUser = authUser;
