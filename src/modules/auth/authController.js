@@ -7,6 +7,7 @@ import { Investor } from '../../../DB/models/investor.model.js';
 import { Company } from '../../../DB/models/company.model.js';
 import { Organization } from '../../../DB/models/organization.model.js';
 import { sendEmail } from '../../Utils/sendEmail.js';
+import { decode } from 'punycode';
 
 export const createTokenAndSendCookie = (id, res) => {
   // create token
@@ -141,7 +142,7 @@ export const resetPassword = errorHandler(async (req, res, next) => {
       }
     })
   );
-  console.log(returnedModel)
+  console.log(returnedModel);
   const user = await returnedModel.findOne({
     passwordResetToken: hashedToken,
     passwordResetTokenExpires: { $gt: Date.now() },
@@ -198,11 +199,27 @@ export const protect = errorHandler(async (req, res, next) => {
   // verify token
   const decoded = await promisify(jwt.verify)(token, process.env.SECRET_KEY);
   console.log(decoded);
+
+  // select correct model
+  const allModels = [
+    { mod: Company },
+    { mod: Investor },
+    { mod: Organization },
+  ];
+  let returnedModel;
+  await Promise.all(
+    allModels.map(async (el) => {
+      const myModel = await el.mod.findById(decoded.id);
+      // console.log(myModel)
+      if (myModel != null) {
+        returnedModel = el.mod;
+      }
+    })
+  );
   // check if the user still exist
-  const currentUser = await Investor.findOne({ _id: decoded.id });
+  const currentUser = await returnedModel.findOne({ _id: decoded.id });
   if (!currentUser)
     return next(new AppError('user belong to this token no longer exist', 401));
-  console.log(currentUser);
   // check if the user change password
   if (currentUser.passwordChangeAfter(decoded.iat))
     return next(
