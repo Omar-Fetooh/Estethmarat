@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import { Investor } from '../../../DB/models/index.js';
 import { AppError } from '../../Utils/AppError.js';
 import { createTokenAndSendCookie } from '../auth/authController.js';
-
+import { APIFEATURES } from '../../Utils/apiFeatures.js';
 import { errorHandler } from '../../middlewares/error-handling.middleware.js';
 
 // investor register
@@ -25,7 +25,13 @@ export const register = errorHandler(async (req, res, next) => {
 
 // get all investors
 export const getAllInvestors = errorHandler(async (req, res, next) => {
-  const investors = await Investor.find();
+  const obj = new APIFEATURES(req.query, Investor.find())
+    .filter()
+    .selectFields()
+    .sortFields()
+    .paginate();
+
+  const investors = await obj.query;
   res.status(200).json({
     status: 'success',
     result: investors.length,

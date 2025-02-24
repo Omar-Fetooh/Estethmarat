@@ -4,6 +4,7 @@ import {
   forgotPassword,
   resetPassword,
   logout,
+  protect,
 } from './../auth/authController.js';
 
 import {
@@ -16,10 +17,10 @@ import {
 
 export const investorRouter = Router();
 
-investorRouter.post('/login', login);
+// investorRouter.post('/login', login);
 investorRouter.get('/logout', logout);
-investorRouter.post('/forgotPassword', forgotPassword);
-investorRouter.patch('/resetPassword/:token', resetPassword);
+// investorRouter.post('/forgotPassword', forgotPassword);
+// investorRouter.patch('/resetPassword/:token', resetPassword);
 investorRouter.route('/register').post(register);
 investorRouter.route('/').get(getAllInvestors);
 

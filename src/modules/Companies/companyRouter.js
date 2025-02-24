@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router } from 'express';
 
 export const companyRouter = Router();
 
@@ -8,12 +8,12 @@ import {
   getAllCompanies,
   getCompany,
   updateCompany,
-} from "./companyController.js";
+} from './companyController.js';
 
-companyRouter.route("/").get(getAllCompanies).post(createCompany);
-
+companyRouter.route('/').get(getAllCompanies);
+companyRouter.route('/register').post(createCompany);
 companyRouter
-  .route("/:id")
+  .route('/:id')
   .get(getCompany)
   .patch(updateCompany)
   .delete(deleteCompany);
