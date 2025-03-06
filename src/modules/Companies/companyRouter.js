@@ -9,8 +9,8 @@ import {
   getCompany,
   updateCompany,
 } from './companyController.js';
-
-companyRouter.route('/').get(getAllCompanies);
+import { protect } from '../auth/authController.js';
+companyRouter.route('/').get(protect, getAllCompanies);
 companyRouter.route('/register').post(createCompany);
 companyRouter
   .route('/:id')

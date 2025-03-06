@@ -260,10 +260,13 @@ companySchema.methods.createPasswordResetToken = function () {
   return resetToken;
 };
 // check if the user change password after issued jwt or not
-companySchema.methods.changePasswordAfter = function (jwtIssuedAt) {
+companySchema.methods.passwordChangeAfter = function (issuedTimeStamp) {
   if (this.passwordChangedAt) {
-    const changeAt = parseInt(this.passwordChangedAt.getTime() / 1000, 10);
-    return changeAt > jwtIssuedAt;
+    const passwordChangedAtSeconds = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
+    return passwordChangedAtSeconds > issuedTimeStamp;
   }
   return false;
 };
