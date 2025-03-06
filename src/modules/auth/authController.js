@@ -1,11 +1,9 @@
-<<<<<<< HEAD
 // import crypto from 'crypto';
 // import jwt from 'jsonwebtoken';
 // import { errorHandler } from '../../middlewares/error-handling.middleware.js';
 // import { AppError } from '../Utils/index.js';
 // import { Investor } from '../../DB/models/index.js';
 // import { sendEmail } from './../Utils/sendEmail.js';
-=======
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { promisify } from 'util';
@@ -16,26 +14,24 @@ import { Company } from '../../../DB/models/company.model.js';
 import { Organization } from '../../../DB/models/organization.model.js';
 import { sendEmail } from '../../Utils/sendEmail.js';
 import { decode } from 'punycode';
->>>>>>> 47367c249b182e72b7d48976f3fe8714f75a2007
 
-// export const createTokenAndSendCookie = (id, res) => {
-//   // create token
-//   const token = jwt.sign({ id }, process.env.SECRET_KEY, {
-//     expiresIn: process.env.EXPIRES_IN,
-//   });
-//   // some options for cookie
-//   const options = {
-//     expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
-//     httpOnly: true,
-//   };
-//   // add secure in production
-//   if (process.env.NODE_ENV === 'production') options.secure = true;
-//   // save token in cookie
-//   res.cookie('jwt', token, options);
-//   return token;
-// };
+export const createTokenAndSendCookie = (id, res) => {
+  // create token
+  const token = jwt.sign({ id }, process.env.SECRET_KEY, {
+    expiresIn: process.env.EXPIRES_IN,
+  });
+  // some options for cookie
+  const options = {
+    expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+    httpOnly: true,
+  };
+  // add secure in production
+  if (process.env.NODE_ENV === 'production') options.secure = true;
+  // save token in cookie
+  res.cookie('jwt', token, options);
+  return token;
+};
 
-<<<<<<< HEAD
 // // login
 // export const login = errorHandler(async (req, res, next) => {
 //   // console.log(req.originalUrl)
@@ -145,7 +141,6 @@ import { decode } from 'punycode';
 //     message: 'logged out successfully',
 //   });
 // });
-=======
 // login
 export const login = errorHandler(async (req, res, next) => {
   // console.log(req.originalUrl)
@@ -349,4 +344,3 @@ export const protect = errorHandler(async (req, res, next) => {
   req.user = currentUser;
   next();
 });
->>>>>>> 47367c249b182e72b7d48976f3fe8714f75a2007

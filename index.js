@@ -9,7 +9,6 @@ import { globalMiddleware } from './src/middlewares/errorController.js';
 import { AppError } from './src/Utils/AppError.js';
 import { globalResponse } from './src/middlewares/error-handling.middleware.js';
 
-<<<<<<< HEAD
 config({ path: './config.env' });
 
 const DATABASECONNECTIONSTRING = process.env.DATABASE_STR.replace(
@@ -18,11 +17,6 @@ const DATABASECONNECTIONSTRING = process.env.DATABASE_STR.replace(
 );
 
 db_connection(DATABASECONNECTIONSTRING);
-=======
-// config({ path: './config.env' });
-config();
-db_connection();
->>>>>>> d3ab37cc40e8c36d25a63082081b1b79db42ebe9
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -37,15 +31,13 @@ app.use('/api/v1/auth', router.authRouter);
 app.use('/api/v1/organizations', router.organizationRouter);
 // app.use('/api/v1/investors', router.investorRouter);
 app.use('/api/v1/companies', router.companyRouter);
-<<<<<<< HEAD
+
 app.use('/api/v1/posts', router.postRouter);
-app.use(`/api/v1/auth`, router.authRouter);
 app.use('/api/v1/reviews', router.reviewRouter);
 app.use('/api/v1/donations', router.donationRouter);
-=======
+
 app.use('/api/v1/consultations', router.consultationRouter);
 app.use('/api/v1/questions', router.questionRouter);
->>>>>>> 47367c249b182e72b7d48976f3fe8714f75a2007
 
 app.all('*', (req, res, next) => {
   next(new AppError(`${req.originalUrl} Not found`, 404));
