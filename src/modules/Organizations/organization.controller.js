@@ -1,9 +1,10 @@
-import slugify from "slugify";
-import bcrypt from "bcrypt";
-import { nanoid } from "nanoid";
-import { cloudinaryConfig } from "../../Utils/index.js";
-import { Organization } from "../../../DB/models/index.js";
-import { AppError } from "../../Utils/AppError.js";
+import slugify from 'slugify';
+import bcrypt from 'bcrypt';
+import { nanoid } from 'nanoid';
+import { cloudinaryConfig } from '../../Utils/index.js';
+import { Organization } from '../../../DB/models/index.js';
+import { AppError } from '../../Utils/AppError.js';
+import { APIFEATURES } from '../../Utils/index.js';
 
 export const addOrganization = async (req, res, next) => {
   const {
@@ -23,10 +24,10 @@ export const addOrganization = async (req, res, next) => {
     legalRepresentativeId,
   } = req.body;
 
-  const slug = slugify(name, { replacement: "_", lower: "true" });
+  const slug = slugify(name, { replacement: '_', lower: 'true' });
 
   if (!req.file) {
-    return next(new AppError("please upload a Logo Image", 400));
+    return next(new AppError('please upload a Logo Image', 400));
   }
 
   if (
@@ -38,12 +39,12 @@ export const addOrganization = async (req, res, next) => {
     !description ||
     !location
   ) {
-    return next(new AppError("All Required fields must be provided.", 400));
+    return next(new AppError('All Required fields must be provided.', 400));
   }
 
   const organizationExists = await Organization.findOne({ name });
   if (organizationExists)
-    return next(new AppError("This name already exists", 400));
+    return next(new AppError('This name already exists', 400));
 
   const customId = nanoid(4);
   const { secure_url, public_id } = await cloudinaryConfig().uploader.upload(
@@ -53,13 +54,11 @@ export const addOrganization = async (req, res, next) => {
     }
   );
 
-  const hashedPassword = bcrypt.hashSync(password, +process.env.SALT_ROUNDS);
-
   const newOrganization = new Organization({
     name,
     slug,
     email,
-    password: hashedPassword,
+    password,
     typeOfOrganization,
     phoneNumber,
     description,
@@ -82,15 +81,21 @@ export const addOrganization = async (req, res, next) => {
 
   res
     .status(201)
-    .json({ message: "Organization Added Successfully", newOrganization });
+    .json({ message: 'Organization Added Successfully', newOrganization });
 };
 
 export const getAllOrganizations = async (req, res, next) => {
-  const organizations = await Organization.find();
+  const obj = new APIFEATURES(req.query, Organization.find())
+    .filter()
+    .selectFields()
+    .sortFields()
+    .paginate();
+
+  const organizations = await obj.query;
 
   res
     .status(200)
-    .json({ message: "All organizations fetched successfully", organizations });
+    .json({ message: 'All organizations fetched successfully', organizations });
 };
 
 export const getOrganizationById = async (req, res, next) => {
@@ -99,12 +104,12 @@ export const getOrganizationById = async (req, res, next) => {
   const organization = await Organization.findById(organizationId);
 
   if (!organization) {
-    return next(new AppError("Sorry organization not found", 404));
+    return next(new AppError('Sorry organization not found', 404));
   }
 
   res
     .status(200)
-    .json({ message: "organization fetched successfully", organization });
+    .json({ message: 'organization fetched successfully', organization });
 };
 
 export const deleteOrganization = async (req, res, next) => {
@@ -113,7 +118,7 @@ export const deleteOrganization = async (req, res, next) => {
   const organization = await Organization.findById(organizationId);
 
   if (!organization) {
-    return next(new AppError("Sorry organization not found", 404));
+    return next(new AppError('Sorry organization not found', 404));
   }
 
   await cloudinaryConfig().api.delete_resources_by_prefix(
@@ -130,8 +135,8 @@ export const deleteOrganization = async (req, res, next) => {
   await organization.save();
 
   res.status(200).json({
-    status: "Success",
-    message: "Organization deleted successfully",
+    status: 'Success',
+    message: 'Organization deleted successfully',
     data: organization,
   });
 };
@@ -142,7 +147,7 @@ export const updateOrganization = async (req, res, next) => {
   const organization = await Organization.findById(organizationId);
 
   if (!organization) {
-    return next(new AppError("Sorry organization not found", 404));
+    return next(new AppError('Sorry organization not found', 404));
   }
   const {
     name,
@@ -164,10 +169,10 @@ export const updateOrganization = async (req, res, next) => {
   if (name) {
     const isNameDuplicated = await Organization.findOne({ name });
     if (isNameDuplicated) {
-      return next(new AppError("sorry the new name is duplicated", 400));
+      return next(new AppError('sorry the new name is duplicated', 400));
     }
 
-    const slug = slugify(name, { replacement: "_", lower: true });
+    const slug = slugify(name, { replacement: '_', lower: true });
     organization.name = name;
     organization.slug = slug;
   }
@@ -210,7 +215,7 @@ export const updateOrganization = async (req, res, next) => {
   await organization.save();
 
   res.status(200).json({
-    message: "Organization updated successfully",
+    message: 'Organization updated successfully',
     organization,
   });
 };

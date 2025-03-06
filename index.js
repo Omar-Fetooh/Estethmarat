@@ -10,10 +10,17 @@ import { AppError } from './src/Utils/AppError.js';
 import { globalResponse } from './src/middlewares/error-handling.middleware.js';
 
 config({ path: './config.env' });
-db_connection();
+
+const DATABASECONNECTIONSTRING = process.env.DATABASE_STR.replace(
+  '<db_password>',
+  process.env.PASSWORD_DATABASE
+);
+
+db_connection(DATABASECONNECTIONSTRING);
 
 const app = express();
 const port = process.env.PORT || 5000;
+// console.log(DATABASECONNECTIONSTRING);
 
 // parse req.body
 app.use(express.json({ limit: '10kb' }));

@@ -1,12 +1,19 @@
-import { Company } from "../../../DB/models/index.js";
-import { AppError } from "../../Utils/AppError.js";
+import { Company } from '../../../DB/models/index.js';
+import { AppError } from '../../Utils/AppError.js';
+import { APIFEATURES } from '../../Utils/apiFeatures.js';
 
-import { errorHandler } from "../../middlewares/error-handling.middleware.js";
+import { errorHandler } from '../../middlewares/error-handling.middleware.js';
 
 export const getAllCompanies = errorHandler(async (req, res, next) => {
-  const companies = await Company.find();
+  const obj = new APIFEATURES(req.query, Company.find())
+    .filter()
+    .selectFields()
+    .sortFields()
+    .paginate();
+
+  const companies = await obj.query;
   res.status(200).json({
-    status: "success",
+    status: 'success',
     results: companies.length,
     data: {
       companies,
@@ -17,7 +24,7 @@ export const createCompany = errorHandler(async (req, res, next) => {
   const newCompany = await Company.create(req.body);
   newCompany.password = undefined;
   res.status(201).json({
-    status: "success",
+    status: 'success',
     data: {
       company: newCompany,
     },
@@ -26,9 +33,9 @@ export const createCompany = errorHandler(async (req, res, next) => {
 export const getCompany = errorHandler(async (req, res, next) => {
   const company = await Company.findById(req.params.id);
   if (!company)
-    return next(new AppError("There is no company with this id", 404));
+    return next(new AppError('There is no company with this id', 404));
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: {
       company,
     },
@@ -38,7 +45,7 @@ export const updateCompany = errorHandler(async (req, res, next) => {
   // get the company with id at first
   const gettedCompany = await Company.findById(req.params.id);
   if (!gettedCompany)
-    return next(new AppError("There is no company with this id", 404));
+    return next(new AppError('There is no company with this id', 404));
   const updatedCompany = await Company.findByIdAndUpdate(
     req.params.id,
     req.body,
@@ -49,7 +56,7 @@ export const updateCompany = errorHandler(async (req, res, next) => {
   );
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: {
       company: updatedCompany,
     },
@@ -58,10 +65,10 @@ export const updateCompany = errorHandler(async (req, res, next) => {
 export const deleteCompany = errorHandler(async (req, res, next) => {
   const gettedCompany = await Company.findById(req.params.id);
   if (!gettedCompany)
-    return next(new AppError("There is no company with this id", 404));
+    return next(new AppError('There is no company with this id', 404));
   await Company.findByIdAndDelete(req.params.id);
   res.status(204).json({
-    status: "success",
+    status: 'success',
     data: null,
   });
 });
