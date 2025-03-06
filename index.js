@@ -29,7 +29,7 @@ app.use(cookieParser());
 
 app.use('/api/v1/auth', router.authRouter);
 app.use('/api/v1/organizations', router.organizationRouter);
-// app.use('/api/v1/investors', router.investorRouter);
+app.use('/api/v1/investors', router.investorRouter);
 app.use('/api/v1/companies', router.companyRouter);
 
 app.use('/api/v1/posts', router.postRouter);
