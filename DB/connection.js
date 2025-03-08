@@ -4,10 +4,10 @@ const db_connection = (connectionStr) => {
   console.log(connectionStr);
   mongoose
     .connect(connectionStr, {
-      useNewUrlParser: true,
+      // useNewUrlParser: true,
       // useCreateIndex: true,
       // useFindAndModify: false,
-      useUnifiedTopology: true,
+      // useUnifiedTopology: true,
     })
     .then(() => {
       console.log('Database connected successfully ✅');
