@@ -16,7 +16,8 @@ const DATABASECONNECTIONSTRING = process.env.DATABASE_STR.replace(
   process.env.PASSWORD_DATABASE
 );
 
-db_connection(DATABASECONNECTIONSTRING);
+// db_connection(DATABASECONNECTIONSTRING);
+db_connection('mongodb://localhost:27017/estethmarat');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -31,6 +32,7 @@ app.use('/api/v1/auth', router.authRouter);
 app.use('/api/v1/organizations', router.organizationRouter);
 app.use('/api/v1/investors', router.investorRouter);
 app.use('/api/v1/companies', router.companyRouter);
+app.use('/api/v1/supportOrganizations', router.supportOrganizationRouter);
 
 app.use('/api/v1/posts', router.postRouter);
 app.use('/api/v1/reviews', router.reviewRouter);

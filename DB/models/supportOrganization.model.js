@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import mongoose, { Schema, model } from 'mongoose';
 
 const supportOrganizationSchema = new Schema(
   {
@@ -13,16 +13,16 @@ const supportOrganizationSchema = new Schema(
     organizationType: {
       type: String,
       required: true,
-      enum: [
-        'Business Incubator',
-        'Startup Accelerator',
-        'Innovation Hub',
-        'Venture Capital Firm',
-        'Crowdfunding Platform',
-        'Bank/Financial Institution',
-        'Government Organization/Economic Authority',
-        'Other',
-      ],
+      //   enum: [
+      //     'Business Incubator',
+      //     'Startup Accelerator',
+      //     'Innovation Hub',
+      //     'Venture Capital Firm',
+      //     'Crowdfunding Platform',
+      //     'Bank/Financial Institution',
+      //     'Government Organization/Economic Authority',
+      //     'Other',
+      //   ],
     },
     image: {
       secure_url: {
@@ -34,6 +34,11 @@ const supportOrganizationSchema = new Schema(
         required: true,
         unique: true,
       },
+    },
+    customId: {
+      type: String,
+      required: true,
+      unique: true,
     },
     email: {
       type: String,
@@ -53,32 +58,32 @@ const supportOrganizationSchema = new Schema(
       {
         type: String,
         required: true,
-        enum: [
-          'Funding and Investment',
-          'Financial and Banking Support',
-          'Legal and Administrative Consulting',
-          'Business Development and Strategic Planning',
-          'Training and Mentorship',
-          'Government Grants and Facilities',
-          'Technical Development and Technological Support',
-          'Operational and Logistics Support',
-          'Incubators and Co-Working Spaces',
-          'Marketing and Promotion',
-          'Other',
-        ],
+        // enum: [
+        //   'Funding and Investment',
+        //   'Financial and Banking Support',
+        //   'Legal and Administrative Consulting',
+        //   'Business Development and Strategic Planning',
+        //   'Training and Mentorship',
+        //   'Government Grants and Facilities',
+        //   'Technical Development and Technological Support',
+        //   'Operational and Logistics Support',
+        //   'Incubators and Co-Working Spaces',
+        //   'Marketing and Promotion',
+        //   'Other',
+        // ],
       },
     ],
     targetedProjectStages: [
       {
         type: String,
         required: true,
-        enum: [
-          'Pre-Seed (Prototype Stage)',
-          'Seed (Founding and Initial Funding)',
-          'Series A (Early Expansion)',
-          'Series B (Expansion and Rapid Growth)',
-          'Late Stage / IPO (Pre-Public Offering)',
-        ],
+        // enum: [
+        //   'Pre-Seed (Prototype Stage)',
+        //   'Seed (Founding and Initial Funding)',
+        //   'Series A (Early Expansion)',
+        //   'Series B (Expansion and Rapid Growth)',
+        //   'Late Stage / IPO (Pre-Public Offering)',
+        // ],
       },
     ],
     providedPrograms: [{ type: String }],
@@ -95,7 +100,7 @@ const supportOrganizationSchema = new Schema(
     sector: { type: String, required: true },
     description: { type: String },
     registrationNumber: { type: String, required: true, unique: true },
-    companyDoc: { type: String }, // URL to the company document
+    // companyDoc: { type: String }, // URL to the company document
     fundResources: [{ type: String }],
     acceptedByAdmin: {
       type: Boolean,

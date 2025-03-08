@@ -7,3 +7,4 @@ export * from './auth/auth.routes.js';
 export * from './Posts/post.routes.js';
 export * from './Reviews/review.routes.js';
 export * from './Donations/donation.routes.js';
+export * from './supportOrganizations/supportOrganization.routes.js';
