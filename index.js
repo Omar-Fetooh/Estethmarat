@@ -33,6 +33,7 @@ app.use('/api/v1/organizations', router.organizationRouter);
 app.use('/api/v1/investors', router.investorRouter);
 app.use('/api/v1/companies', router.companyRouter);
 app.use('/api/v1/supportOrganizations', router.supportOrganizationRouter);
+app.use('/api/v1/charityOrganizations', router.charityOrganizationRouter);
 
 app.use('/api/v1/posts', router.postRouter);
 app.use('/api/v1/reviews', router.reviewRouter);
