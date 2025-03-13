@@ -15,7 +15,6 @@ export const addSupportOrganization = async (req, res, next) => {
     organizationType,
     phoneNumber,
     description,
-    location,
     bankAccountNumber,
     sector,
     registrationNumber,
@@ -30,6 +29,8 @@ export const addSupportOrganization = async (req, res, next) => {
     representativeEmail,
     representativeNationalId,
     fundResources,
+    country,
+    headQuarter,
   } = req.body;
 
   if (!req.file) {
@@ -43,7 +44,9 @@ export const addSupportOrganization = async (req, res, next) => {
     !organizationType ||
     !phoneNumber ||
     !description ||
-    !location
+    // !location
+    !country ||
+    !headQuarter
   ) {
     return next(new AppError('All required fields must be provided.', 400));
   }
@@ -66,30 +69,32 @@ export const addSupportOrganization = async (req, res, next) => {
     username,
     email,
     password,
-    organizationType,
+    organizationType: organizationType,
     phoneNumber,
     description,
     image: {
       secure_url,
       public_id,
     },
-    location,
+    // location,
+    country,
+    headQuarter,
     customId,
     website,
     bankAccountNumber,
     sector,
     registrationNumber,
     targetFundingValue,
-    supportedProjectFields,
-    supportTypes,
-    targetedProjectStages,
-    providedPrograms,
+    supportedProjectFields: JSON.parse(supportedProjectFields),
+    supportTypes: JSON.parse(supportTypes),
+    targetedProjectStages: JSON.parse(targetedProjectStages),
+    providedPrograms: JSON.parse(providedPrograms),
     commercialRegistrationNumber,
     taxIdNumber,
     representativeName,
     representativeEmail,
     representativeNationalId,
-    fundResources,
+    fundResources: JSON.parse(fundResources),
   });
 
   await newSupportOrganization.save();
@@ -176,7 +181,6 @@ export const updateSupportOrganization = async (req, res, next) => {
     organizationType,
     phoneNumber,
     description,
-    location,
     bankAccountNumber,
     sector,
     registrationNumber,
@@ -209,7 +213,9 @@ export const updateSupportOrganization = async (req, res, next) => {
   if (organizationType) supportOrganization.organizationType = organizationType;
   if (phoneNumber) supportOrganization.phoneNumber = phoneNumber;
   if (description) supportOrganization.description = description;
-  if (location) supportOrganization.location = location;
+  // if (location) supportOrganization.location = location;
+  if (country) supportOrganization.country = country;
+  if (headQuarter) supportOrganization.headQuarter = headQuarter;
   if (bankAccountNumber)
     supportOrganization.bankAccountNumber = bankAccountNumber;
   if (sector) supportOrganization.sector = sector;
