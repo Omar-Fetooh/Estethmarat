@@ -14,7 +14,6 @@ export const addCharityOrganization = async (req, res, next) => {
     website,
     organizationType,
     phoneNumber,
-    location,
     projectTypes,
     targetedGroups,
     targetedRegions,
@@ -24,6 +23,8 @@ export const addCharityOrganization = async (req, res, next) => {
     representativeName,
     representativeEmail,
     representativeNationalId,
+    country,
+    headQuarter,
   } = req.body;
 
   if (!req.file) {
@@ -36,7 +37,7 @@ export const addCharityOrganization = async (req, res, next) => {
     !name ||
     !organizationType ||
     !phoneNumber ||
-    !location ||
+    // !location ||
     !commercialRegistrationNumber ||
     !taxIdNumber ||
     !representativeName ||
@@ -64,14 +65,15 @@ export const addCharityOrganization = async (req, res, next) => {
     username,
     email,
     password,
-    organizationType,
+    organizationType: JSON.parse(organizationType),
     phoneNumber,
     image: {
       secure_url,
       public_id,
     },
     customId,
-    location,
+    country,
+    headQuarter,
     website,
     projectTypes: JSON.parse(projectTypes),
     targetedGroups: JSON.parse(targetedGroups),
@@ -169,7 +171,8 @@ export const updateCharityOrganization = async (req, res, next) => {
     organizationType,
     phoneNumber,
     description,
-    location,
+    country,
+    headQuarter,
     bankAccountNumber,
     sector,
     registrationNumber,
@@ -203,7 +206,8 @@ export const updateCharityOrganization = async (req, res, next) => {
   if (organizationType) charityOrganization.organizationType = organizationType;
   if (phoneNumber) charityOrganization.phoneNumber = phoneNumber;
   if (description) charityOrganization.description = description;
-  if (location) charityOrganization.location = location;
+  if (country) charityOrganization.country = country;
+  if (headQuarter) charityOrganization.headQuarter = headQuarter;
   if (bankAccountNumber)
     charityOrganization.bankAccountNumber = bankAccountNumber;
   if (sector) charityOrganization.sector = sector;
