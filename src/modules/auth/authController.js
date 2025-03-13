@@ -166,7 +166,6 @@ export const login = errorHandler(async (req, res, next) => {
   );
   // 2) get investor based on email from database
   const user = await returnedModel.findOne({ email }).select('+password');
-  console.log(user);
   // 3) check if input password mathing one in database
   if (!user || !(await user.correctPassword(password, user.password)))
     return next(new AppError('email or password are not correct', 400));
@@ -313,8 +312,6 @@ export const protect = errorHandler(async (req, res, next) => {
     return next(new AppError('you are not logged in, please login again', 401));
   // verify token
   const decoded = await promisify(jwt.verify)(token, process.env.SECRET_KEY);
-  console.log(decoded);
-
   // select correct model
   const allModels = [
     { mod: Company },

@@ -72,3 +72,21 @@ export const deleteCompany = errorHandler(async (req, res, next) => {
     data: null,
   });
 });
+// get top five companines based on their net profit
+export const getTopCompanies = errorHandler(async (req, res, next) => {
+  const topCompanies = await Company.aggregate([
+    {
+      $sort: { netProfit: -1 },
+    },
+    {
+      $project: { companyName: 1, comapnyPhoto: 1, netProfit: 1, _id: 0 },
+    },
+    {
+      $limit: 5,
+    },
+  ]);
+  res.status(200).json({
+    status: 'success',
+    topCompanies,
+  });
+});
