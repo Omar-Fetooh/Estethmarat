@@ -8,8 +8,11 @@ import {
   getAllCompanies,
   getCompany,
   updateCompany,
+  getTopCompanies,
 } from './companyController.js';
 import { protect } from '../auth/authController.js';
+//get top five companies with maximum netProfit
+companyRouter.get('/top-companies', getTopCompanies);
 companyRouter.route('/').get(protect, getAllCompanies);
 companyRouter.route('/register').post(createCompany);
 companyRouter

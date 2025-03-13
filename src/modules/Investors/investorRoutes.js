@@ -20,6 +20,7 @@ import {
   getInvestor,
   updateInvestor,
   deleteInvestor,
+  getTopInvestors,
 } from './investorController.js';
 
 export const investorRouter = Router();
@@ -33,6 +34,8 @@ export const investorRouter = Router();
 // investorRouter.get('/logout', logout);
 // investorRouter.post('/forgotPassword', forgotPassword);
 // investorRouter.patch('/resetPassword/:token', resetPassword);
+// get the three top investors with maximum points
+investorRouter.get('/top-investors', getTopInvestors);
 investorRouter.route('/register').post(register);
 investorRouter.route('/').get(getAllInvestors);
 
