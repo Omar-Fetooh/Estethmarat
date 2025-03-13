@@ -48,6 +48,10 @@ app.use('/api/v1/donations', router.donationRouter);
 app.use('/api/v1/consultations', router.consultationRouter);
 app.use('/api/v1/questions', router.questionRouter);
 
+app.get('/', (req, res) => res.send('Welcome in Estethmarat!'));
+const server = app.listen(port, () =>
+  console.log(`Example app listening on port ${port}!`)
+);
 app.all('*', (req, res, next) => {
   next(new AppError(`${req.originalUrl} Not found`, 404));
 });
@@ -55,10 +59,6 @@ app.all('*', (req, res, next) => {
 // app.use(globalResponse);
 app.use(globalMiddleware);
 
-app.get('/', (req, res) => res.send('Hello World!'));
-const server = app.listen(port, () =>
-  console.log(`Example app listening on port ${port}!`)
-);
 // unhandled promised
 process.on('unhandledRejection', () => {
   console.log('unhandled promise happened!🔥');
