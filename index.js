@@ -23,12 +23,12 @@ const DATABASECONNECTIONSTRING = process.env.DATABASE_STR.replace(
   process.env.PASSWORD_DATABASE
 );
 
-// db_connection(DATABASECONNECTIONSTRING);
-db_connection('mongodb://localhost:27017/estethmarat');
+db_connection(DATABASECONNECTIONSTRING);
+// db_connection('mongodb://localhost:27017/estethmarat');
 
 const app = express();
 const port = process.env.PORT || 5000;
-// console.log(DATABASECONNECTIONSTRING);
+console.log(DATABASECONNECTIONSTRING);
 
 // parse req.body
 app.use(express.json({ limit: '10kb' }));
