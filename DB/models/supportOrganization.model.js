@@ -159,7 +159,7 @@ const supportOrganizationSchema = new Schema(
       ],
     },
 
-    providedPrograms: [{ type: String }],
+    providedPrograms: { type: String },
     commercialRegistrationNumber: {
       type: String,
       required: true,

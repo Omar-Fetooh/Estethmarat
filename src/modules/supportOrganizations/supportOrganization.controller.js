@@ -11,13 +11,11 @@ export const addSupportOrganization = async (req, res, next) => {
     username,
     email,
     password,
+    rePassword,
     website,
     organizationType,
     phoneNumber,
     description,
-    bankAccountNumber,
-    sector,
-    registrationNumber,
     targetFundingValue,
     supportedProjectFields,
     supportTypes,
@@ -28,7 +26,8 @@ export const addSupportOrganization = async (req, res, next) => {
     representativeName,
     representativeEmail,
     representativeNationalId,
-    fundResources,
+    numberOfProjectsSupported,
+    acceptNotifications,
     country,
     headQuarter,
   } = req.body;
@@ -40,16 +39,19 @@ export const addSupportOrganization = async (req, res, next) => {
   if (
     !email ||
     !password ||
+    !rePassword ||
     !name ||
     !organizationType ||
     !phoneNumber ||
     !description ||
-    // !location
     !country ||
     !headQuarter
   ) {
     return next(new AppError('All required fields must be provided.', 400));
   }
+
+  if (password !== rePassword)
+    return next(new AppError("password and rePassword doesn't match", 400));
 
   const organizationExists = await SupportOrganization.findOne({ username });
   if (organizationExists) {
@@ -76,25 +78,22 @@ export const addSupportOrganization = async (req, res, next) => {
       secure_url,
       public_id,
     },
-    // location,
     country,
     headQuarter,
     customId,
     website,
-    bankAccountNumber,
-    sector,
-    registrationNumber,
     targetFundingValue,
     supportedProjectFields: JSON.parse(supportedProjectFields),
     supportTypes: JSON.parse(supportTypes),
     targetedProjectStages: JSON.parse(targetedProjectStages),
-    providedPrograms: JSON.parse(providedPrograms),
+    providedPrograms: providedPrograms,
     commercialRegistrationNumber,
     taxIdNumber,
     representativeName,
     representativeEmail,
     representativeNationalId,
-    fundResources: JSON.parse(fundResources),
+    numberOfProjectsSupported,
+    acceptNotifications,
   });
 
   await newSupportOrganization.save();
@@ -163,6 +162,7 @@ export const deleteSupportOrganization = async (req, res, next) => {
     data: supportOrganization,
   });
 };
+
 export const updateSupportOrganization = async (req, res, next) => {
   const { organizationId } = req.params;
 
@@ -181,9 +181,6 @@ export const updateSupportOrganization = async (req, res, next) => {
     organizationType,
     phoneNumber,
     description,
-    bankAccountNumber,
-    sector,
-    registrationNumber,
     targetFundingValue,
     supportedProjectFields,
     supportTypes,
@@ -194,7 +191,8 @@ export const updateSupportOrganization = async (req, res, next) => {
     representativeName,
     representativeEmail,
     representativeNationalId,
-    fundResources,
+    numberOfProjectsSupported,
+    acceptNotifications,
   } = req.body;
 
   if (name) {
@@ -203,9 +201,9 @@ export const updateSupportOrganization = async (req, res, next) => {
       return next(new AppError('Sorry, the new name is duplicated', 400));
     }
 
-    const slug = slugify(name, { replacement: '_', lower: true });
+    // const slug = slugify(name, { replacement: '_', lower: true });
     supportOrganization.name = name;
-    supportOrganization.slug = slug;
+    // supportOrganization.slug = slug;
   }
 
   if (email) supportOrganization.email = email;
@@ -213,14 +211,8 @@ export const updateSupportOrganization = async (req, res, next) => {
   if (organizationType) supportOrganization.organizationType = organizationType;
   if (phoneNumber) supportOrganization.phoneNumber = phoneNumber;
   if (description) supportOrganization.description = description;
-  // if (location) supportOrganization.location = location;
   if (country) supportOrganization.country = country;
   if (headQuarter) supportOrganization.headQuarter = headQuarter;
-  if (bankAccountNumber)
-    supportOrganization.bankAccountNumber = bankAccountNumber;
-  if (sector) supportOrganization.sector = sector;
-  if (registrationNumber)
-    supportOrganization.registrationNumber = registrationNumber;
   if (targetFundingValue)
     supportOrganization.targetFundingValue = targetFundingValue;
   if (supportedProjectFields)
@@ -239,7 +231,12 @@ export const updateSupportOrganization = async (req, res, next) => {
     supportOrganization.representativeEmail = representativeEmail;
   if (representativeNationalId)
     supportOrganization.representativeNationalId = representativeNationalId;
-  if (fundResources) supportOrganization.fundResources = fundResources;
+
+  if (numberOfProjectsSupported)
+    supportOrganization.numberOfProjectsSupported = numberOfProjectsSupported;
+
+  if (acceptNotifications)
+    supportOrganization.acceptNotifications = acceptNotifications;
 
   if (req.file) {
     if (supportOrganization.image?.public_id) {
