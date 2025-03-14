@@ -169,12 +169,8 @@ const supportOrganizationSchema = new Schema(
     representativeName: { type: String, required: true },
     representativeEmail: { type: String, required: true },
     representativeNationalId: { type: String, required: true },
-    bankAccountNumber: { type: String, required: true },
-    sector: { type: String, required: true },
     description: { type: String },
-    registrationNumber: { type: String, required: true, unique: true },
-    // companyDoc: { type: String }, // URL to the company document
-    fundResources: [{ type: String }],
+    numberOfProjectsSupported: { type: Number },
     country: {
       type: String,
       required: [true, 'Select the country for this company now!'],
@@ -385,6 +381,10 @@ const supportOrganizationSchema = new Schema(
         'طوسمريب',
         'شكوشو',
       ],
+    },
+    acceptNotifications: {
+      type: Boolean,
+      default: false,
     },
     acceptedByAdmin: {
       type: Boolean,
