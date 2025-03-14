@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
-const db_connection = (connectionStr) => {
-  mongoose
+const db_connection = async (connectionStr) => {
+  await mongoose
     .connect(connectionStr, {
       // useNewUrlParser: true,
       // useCreateIndex: true,
