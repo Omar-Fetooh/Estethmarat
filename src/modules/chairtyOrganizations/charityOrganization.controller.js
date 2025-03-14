@@ -11,6 +11,7 @@ export const addCharityOrganization = async (req, res, next) => {
     username,
     email,
     password,
+    rePassword,
     website,
     organizationType,
     phoneNumber,
@@ -25,27 +26,34 @@ export const addCharityOrganization = async (req, res, next) => {
     representativeNationalId,
     country,
     headQuarter,
+    acceptNotifications,
   } = req.body;
 
-  if (!req.file) {
-    return next(new AppError('Please upload an image', 400));
+  if (!req.files) {
+    return next(
+      new AppError('Please upload an image and a pdf for document proof', 400)
+    );
   }
 
   if (
     !email ||
     !password ||
+    !rePassword ||
     !name ||
     !organizationType ||
     !phoneNumber ||
-    // !location ||
     !commercialRegistrationNumber ||
     !taxIdNumber ||
     !representativeName ||
     !representativeEmail ||
     !representativeNationalId
+    // !registrationProof
   ) {
     return next(new AppError('All required fields must be provided.', 400));
   }
+
+  if (password !== rePassword)
+    return next(new AppError("password and rePassword doesn't match", 400));
 
   const organizationExists = await CharityOrganization.findOne({ username });
   if (organizationExists) {
@@ -54,11 +62,17 @@ export const addCharityOrganization = async (req, res, next) => {
 
   const customId = nanoid(4);
   const { secure_url, public_id } = await cloudinaryConfig().uploader.upload(
-    req.file.path,
+    req.files.image[0].path,
     {
       folder: `${process.env.UPLOADS_FOLDER}/CharityOrganization/${customId}`,
     }
   );
+
+  const { secure_url: file_secure_url, public_id: file_public_id } =
+    await cloudinaryConfig().uploader.upload(req.files.doc[0].path, {
+      folder: `${process.env.UPLOADS_FOLDER}/CharityOrganization/${customId}`,
+      resource_type: 'raw',
+    });
 
   const newCharityOrganization = new CharityOrganization({
     name,
@@ -70,6 +84,10 @@ export const addCharityOrganization = async (req, res, next) => {
     image: {
       secure_url,
       public_id,
+    },
+    registrationProof: {
+      secure_url: file_secure_url,
+      public_id: file_public_id,
     },
     customId,
     country,
@@ -84,6 +102,7 @@ export const addCharityOrganization = async (req, res, next) => {
     representativeName,
     representativeEmail,
     representativeNationalId,
+    acceptNotifications,
   });
 
   await newCharityOrganization.save();
@@ -189,7 +208,8 @@ export const updateCharityOrganization = async (req, res, next) => {
     fundResources,
     targetedGroups,
     targetedRegions,
-    registrationProof,
+    // registrationProof,
+    acceptNotifications,
   } = req.body;
 
   if (name) {
@@ -234,40 +254,42 @@ export const updateCharityOrganization = async (req, res, next) => {
   if (fundResources) charityOrganization.fundResources = fundResources;
   if (targetedGroups) charityOrganization.targetedGroups = targetedGroups;
   if (targetedRegions) charityOrganization.targetedRegions = targetedRegions;
+  if (acceptNotifications)
+    charityOrganization.acceptNotifications = acceptNotifications;
 
-  if (req.file) {
-    if (charityOrganization.image?.public_id) {
-      await cloudinaryConfig().uploader.destroy(
-        charityOrganization.image.public_id
-      );
-    }
+  // if (req.files) {  // TODO need to be handled again with the updates
+  //   if (charityOrganization.image?.public_id) {
+  //     await cloudinaryConfig().uploader.destroy(
+  //       charityOrganization.image.public_id
+  //     );
+  //   }
 
-    const { secure_url, public_id } = await cloudinaryConfig().uploader.upload(
-      req.file.path,
-      {
-        folder: `${process.env.UPLOADS_FOLDER}/CharityOrganization/${charityOrganization.customId}`,
-      }
-    );
+  //   const { secure_url, public_id } = await cloudinaryConfig().uploader.upload(
+  //     req.file.path,
+  //     {
+  //       folder: `${process.env.UPLOADS_FOLDER}/CharityOrganization/${charityOrganization.customId}`,
+  //     }
+  //   );
 
-    charityOrganization.image = { secure_url, public_id };
-  }
+  //   charityOrganization.image = { secure_url, public_id };
+  // }
 
-  if (registrationProof) {
-    if (charityOrganization.registrationProof?.public_id) {
-      await cloudinaryConfig().uploader.destroy(
-        charityOrganization.registrationProof.public_id
-      );
-    }
+  // if (registrationProof) {
+  //   if (charityOrganization.registrationProof?.public_id) {
+  //     await cloudinaryConfig().uploader.destroy(
+  //       charityOrganization.registrationProof.public_id
+  //     );
+  //   }
 
-    const { secure_url, public_id } = await cloudinaryConfig().uploader.upload(
-      registrationProof.path,
-      {
-        folder: `${process.env.UPLOADS_FOLDER}/CharityOrganization/${charityOrganization.customId}/RegistrationProof`,
-      }
-    );
+  //   const { secure_url, public_id } = await cloudinaryConfig().uploader.upload(
+  //     registrationProof.path,
+  //     {
+  //       folder: `${process.env.UPLOADS_FOLDER}/CharityOrganization/${charityOrganization.customId}/RegistrationProof`,
+  //     }
+  //   );
 
-    charityOrganization.registrationProof = { secure_url, public_id };
-  }
+  //   charityOrganization.registrationProof = { secure_url, public_id };
+  // }
 
   await charityOrganization.save();
 

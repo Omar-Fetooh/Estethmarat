@@ -16,7 +16,12 @@ export const charityOrganizationRouter = Router();
 
 charityOrganizationRouter.post(
   '/add',
-  multerHost({ allowedExtensions: extensions.Images }).single('image'),
+  multerHost({
+    allowedExtensions: [...extensions.Images, ...extensions.Documents],
+  }).fields([
+    { name: 'image', maxCount: 1 },
+    { name: 'doc', maxCount: 1 },
+  ]),
   errorHandler(addCharityOrganization)
 );
 
@@ -33,6 +38,11 @@ charityOrganizationRouter.delete(
 
 charityOrganizationRouter.put(
   '/:organizationId',
-  multerHost({ allowedExtensions: extensions.Images }).single('image'),
+  multerHost({
+    allowedExtensions: [...extensions.Images, extensions.Documents],
+  }).fields([
+    { name: 'image', maxCount: 1 },
+    { name: 'doc', maxCount: 1 },
+  ]),
   errorHandler(updateCharityOrganization)
 );
