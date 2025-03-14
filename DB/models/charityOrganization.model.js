@@ -53,7 +53,6 @@ const charityOrganizationSchema = new Schema(
     },
     phoneNumber: { type: String, required: true },
     website: { type: String, match: [/^https?:\/\/.+/, 'Invalid URL format'] },
-    // location: { type: String, required: true },
     password: { type: String, required: true, trim: true, minLength: 6 },
     projectTypes: {
       type: [String],
@@ -140,10 +139,10 @@ const charityOrganizationSchema = new Schema(
       required: [true, 'Representative national ID is required'],
       unique: true,
     },
-    // registrationProof: {
-    //   public_id: { type: String, required: true },
-    //   secure_url: { type: String, required: true },
-    // },
+    registrationProof: {
+      public_id: { type: String, required: true },
+      secure_url: { type: String, required: true },
+    },
     country: {
       type: String,
       required: [true, 'Select the country for this company now!'],
@@ -354,6 +353,10 @@ const charityOrganizationSchema = new Schema(
         'طوسمريب',
         'شكوشو',
       ],
+    },
+    acceptNotifications: {
+      type: Boolean,
+      default: false,
     },
     acceptedByAdmin: {
       type: Boolean,
