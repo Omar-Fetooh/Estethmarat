@@ -17,7 +17,7 @@ const charityOrganizationSchema = new Schema(
       unique: true,
     },
     organizationType: {
-      type: [String],
+      type: String,
       required: [true, 'Organization type is required'],
       enum: [
         'مؤسسة خيرية عامة',
