@@ -128,7 +128,7 @@ const supportOrganizationSchema = new Schema(
         'إمكانية الوصول الرقمي والتصميم الشامل',
       ],
     },
-    supportedProjectsCount: { type: Number, default: 0 },
+    // supportedProjectsCount: { type: Number, default: 0 },
     targetFundingValue: { type: Number, required: true },
     supportTypes: {
       type: [String],

@@ -8,6 +8,7 @@ import db_connection from './DB/connection.js';
 import { globalMiddleware } from './src/middlewares/errorController.js';
 import { AppError } from './src/Utils/AppError.js';
 import { globalResponse } from './src/middlewares/error-handling.middleware.js';
+
 // uncaught exception
 process.on('uncaughtException', (err) => {
   console.log('something went wrong🔥', err);
@@ -29,6 +30,8 @@ db_connection(DATABASECONNECTIONSTRING);
 const app = express();
 const port = process.env.PORT || 5000;
 console.log(DATABASECONNECTIONSTRING);
+
+app.use(cors());
 
 // parse req.body
 app.use(express.json({ limit: '10kb' }));

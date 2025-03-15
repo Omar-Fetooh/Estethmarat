@@ -79,7 +79,7 @@ export const addCharityOrganization = async (req, res, next) => {
     username,
     email,
     password,
-    organizationType: organizationType,
+    organizationType,
     phoneNumber,
     image: {
       secure_url,
