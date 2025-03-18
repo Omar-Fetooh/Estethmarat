@@ -14,10 +14,10 @@ import { Company } from '../../../DB/models/company.model.js';
 import { Organization } from '../../../DB/models/organization.model.js';
 import { sendEmail } from '../../Utils/sendEmail.js';
 import { decode } from 'punycode';
-
-export const createTokenAndSendCookie = (id, res) => {
+import multer from 'multer';
+export const createTokenAndSendCookie = (id, role, res) => {
   // create token
-  const token = jwt.sign({ id }, process.env.SECRET_KEY, {
+  const token = jwt.sign({ id, role }, process.env.SECRET_KEY, {
     expiresIn: process.env.EXPIRES_IN,
   });
   // some options for cookie
@@ -141,6 +141,7 @@ export const createTokenAndSendCookie = (id, res) => {
 //     message: 'logged out successfully',
 //   });
 // });
+export const upload = multer();
 // login
 export const login = errorHandler(async (req, res, next) => {
   // console.log(req.originalUrl)
@@ -170,7 +171,7 @@ export const login = errorHandler(async (req, res, next) => {
   if (!user || !(await user.correctPassword(password, user.password)))
     return next(new AppError('email or password are not correct', 400));
   // 4) login and send token
-  const token = createTokenAndSendCookie(user._id, res);
+  const token = createTokenAndSendCookie(user._id, user.role, res);
   // hide password from response
   user.password = undefined;
   res.status(200).json({
@@ -272,7 +273,7 @@ export const resetPassword = errorHandler(async (req, res, next) => {
   // 3) update password changedat properity
   // done by pre save hook
   // 4) login user and send token
-  const token = createTokenAndSendCookie(user._id, res);
+  const token = createTokenAndSendCookie(user._id, user.role, res);
   res.status(200).json({
     status: 'success',
     message: 'password has been updated successfully',

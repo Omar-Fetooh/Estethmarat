@@ -22,7 +22,7 @@ import {
   deleteInvestor,
   getTopInvestors,
 } from './investorController.js';
-
+import { uploadInvestorPhoto, imageProcessing } from '../upload.js';
 export const investorRouter = Router();
 
 // investorRouter.post('/login', login);
@@ -36,9 +36,13 @@ export const investorRouter = Router();
 // investorRouter.patch('/resetPassword/:token', resetPassword);
 // get the three top investors with maximum points
 investorRouter.get('/top-investors', getTopInvestors);
-investorRouter.route('/register').post(register);
+investorRouter.post(
+  '/register',
+  uploadInvestorPhoto,
+  imageProcessing,
+  register
+);
 investorRouter.route('/').get(getAllInvestors);
-
 investorRouter
   .route('/:id')
   .get(getInvestor)

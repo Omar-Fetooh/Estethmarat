@@ -1,6 +1,7 @@
 import { Company } from '../../../DB/models/index.js';
 import { AppError } from '../../Utils/AppError.js';
 import { APIFEATURES } from '../../Utils/apiFeatures.js';
+import { createTokenAndSendCookie } from '../auth/authController.js';
 
 import { errorHandler } from '../../middlewares/error-handling.middleware.js';
 
@@ -22,11 +23,13 @@ export const getAllCompanies = errorHandler(async (req, res, next) => {
 });
 export const createCompany = errorHandler(async (req, res, next) => {
   const newCompany = await Company.create(req.body);
+  const token = createTokenAndSendCookie(newCompany._id, newCompany.role, res);
   newCompany.password = undefined;
   res.status(201).json({
     status: 'success',
     data: {
       company: newCompany,
+      token,
     },
   });
 });

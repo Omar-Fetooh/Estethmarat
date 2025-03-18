@@ -295,7 +295,7 @@ const companySchema = new mongoose.Schema({
       message: 'Select valid value from select box!',
     },
   },
-  comapnyPhoto: String,
+  companyPhoto: String,
   email: {
     type: String,
     required: [true, 'Enter a valid email for this company now!'],
@@ -574,6 +574,10 @@ const companySchema = new mongoose.Schema({
       },
       message: `You should enter the same password!,This value:{VALUE} is not the same`,
     },
+  },
+  role: {
+    type: String,
+    default: 'company',
   },
   passwordResetToken: String,
   passwordResetTokenExpires: Date,

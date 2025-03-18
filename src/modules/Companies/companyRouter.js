@@ -1,5 +1,5 @@
 import { Router } from 'express';
-
+import { uploadCompanyPhoto, imageProcessing } from '../upload.js';
 export const companyRouter = Router();
 
 import {
@@ -14,7 +14,12 @@ import { protect } from '../auth/authController.js';
 //get top five companies with maximum netProfit
 companyRouter.get('/top-companies', getTopCompanies);
 companyRouter.route('/').get(protect, getAllCompanies);
-companyRouter.route('/register').post(createCompany);
+companyRouter.post(
+  '/register',
+  uploadCompanyPhoto,
+  imageProcessing,
+  createCompany
+);
 companyRouter
   .route('/:id')
   .get(getCompany)

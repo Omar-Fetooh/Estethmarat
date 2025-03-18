@@ -1,7 +1,7 @@
 import slugify from 'slugify';
 import bcrypt from 'bcrypt';
 import { nanoid } from 'nanoid';
-import { cloudinaryConfig } from '../../Utils/index.js';
+// import { cloudinaryConfig } from '../../Utils/index.js';
 import { Organization } from '../../../DB/models/index.js';
 import { AppError } from '../../Utils/AppError.js';
 import { APIFEATURES } from '../../Utils/index.js';

@@ -1,5 +1,5 @@
 import { Organization, Post } from '../../../DB/models/index.js';
-import { AppError, cloudinaryConfig } from '../../Utils/index.js';
+// import { AppError, cloudinaryConfig } from '../../Utils/index.js';
 
 export const createPost = async (req, res, next) => {
   const { title, content, organizationId } = req.body;

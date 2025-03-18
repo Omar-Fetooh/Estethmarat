@@ -207,5 +207,4 @@ investorSchema.methods.passwordChangeAfter = function (issuedTimeStamp) {
   }
   return false;
 };
-
 export const Investor = mongoose.model('Investor', investorSchema);

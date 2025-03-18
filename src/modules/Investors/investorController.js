@@ -10,7 +10,7 @@ export const register = errorHandler(async (req, res, next) => {
   // register new investor
   const newInvestor = await Investor.create(req.body);
   // create token
-  const token = createTokenAndSendCookie(newInvestor._id, res);
+  const token = createTokenAndSendCookie(newInvestor._id, newInvestor.role,  res);
   // to prevent send password in response
   newInvestor.password = undefined;
   // send response
