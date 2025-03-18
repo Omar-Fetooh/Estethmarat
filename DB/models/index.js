@@ -6,3 +6,5 @@ export * from './review.model.js';
 export * from './donation.model.js';
 export * from './conslutation.model.js';
 export * from './question.model.js';
+export * from './supportOrganization.model.js';
+export * from './charityOrganization.model.js';

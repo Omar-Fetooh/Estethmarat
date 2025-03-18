@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // import crypto from 'crypto';
 // import jwt from 'jsonwebtoken';
 // import { errorHandler } from '../../middlewares/error-handling.middleware.js';
