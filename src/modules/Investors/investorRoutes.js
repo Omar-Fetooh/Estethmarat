@@ -1,10 +1,3 @@
-// import { Router } from 'express';
-// import {
-//   login,
-//   forgotPassword,
-//   resetPassword,
-//   logout,
-// } from '../auth/authController.js';
 import { Router } from 'express';
 // import {
 //   login,
@@ -13,6 +6,7 @@ import { Router } from 'express';
 //   logout,
 //   protect,
 // } from './../auth/authController.js';
+export const investorRouter = Router();
 
 import {
   register,
@@ -20,9 +14,10 @@ import {
   getInvestor,
   updateInvestor,
   deleteInvestor,
+  getTopInvestors,
 } from './investorController.js';
 
-export const investorRouter = Router();
+import { uploadPhoto, resizePhoto } from '../upload.js';
 
 // investorRouter.post('/login', login);
 // investorRouter.get('/logout', logout);
@@ -33,8 +28,10 @@ export const investorRouter = Router();
 // investorRouter.get('/logout', logout);
 // investorRouter.post('/forgotPassword', forgotPassword);
 // investorRouter.patch('/resetPassword/:token', resetPassword);
-investorRouter.route('/register').post(register);
+// get three top investors with maxium points
+investorRouter.get('/top-investors', getTopInvestors);
 investorRouter.route('/').get(getAllInvestors);
+investorRouter.route('/register').post(uploadPhoto, resizePhoto, register);
 
 investorRouter
   .route('/:id')

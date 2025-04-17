@@ -9,6 +9,14 @@ import { globalMiddleware } from './src/middlewares/errorController.js';
 import { AppError } from './src/Utils/AppError.js';
 import { globalResponse } from './src/middlewares/error-handling.middleware.js';
 
+// uncaught exception
+process.on('uncaughtException', (err) => {
+  console.log('something went wrong 💥!');
+  // server.close(() => {
+  //   console.log('shut down gracefully');
+  //   process.exit(1);
+  // });
+});
 config({ path: './config.env' });
 
 const DATABASECONNECTIONSTRING = process.env.DATABASE_STR.replace(
@@ -26,10 +34,9 @@ const port = process.env.PORT || 5000;
 app.use(express.json({ limit: '10kb' }));
 // parse cookie
 app.use(cookieParser());
-
 app.use('/api/v1/auth', router.authRouter);
 app.use('/api/v1/organizations', router.organizationRouter);
-// app.use('/api/v1/investors', router.investorRouter);
+app.use('/api/v1/investors', router.investorRouter);
 app.use('/api/v1/companies', router.companyRouter);
 
 app.use('/api/v1/posts', router.postRouter);
@@ -47,4 +54,15 @@ app.all('*', (req, res, next) => {
 app.use(globalMiddleware);
 
 app.get('/', (req, res) => res.send('Hello World!'));
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+const server = app.listen(port, () =>
+  console.log(`Example app listening on port ${port}!`)
+);
+
+// unhandle rejection
+process.on('unhandledRejection', (err) => {
+  console.log('unhandled promise happened 💥!');
+  server.close(() => {
+    console.log('shut down gracefully');
+    process.exit(1);
+  });
+});

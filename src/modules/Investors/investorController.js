@@ -92,3 +92,26 @@ export const deleteInvestor = errorHandler(async (req, res, next) => {
     data: null,
   });
 });
+
+// get top 3 investors based on points
+export const getTopInvestors = errorHandler(async (req, res, next) => {
+  const topInvestors = await Investor.aggregate([
+    { $sort: { points: -1 } },
+    {
+      $project: {
+        fullArabicName: 1,
+        profilePhoto: 1,
+        jobTitle: 1,
+        points: 1,
+        _id: 0,
+      },
+    },
+    {
+      $limit: 3,
+    },
+  ]);
+  res.status(200).json({
+    status: 'success',
+    topInvestors,
+  });
+});

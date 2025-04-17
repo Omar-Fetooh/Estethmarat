@@ -3,7 +3,6 @@ import { AppError } from '../../Utils/AppError.js';
 import { APIFEATURES } from '../../Utils/apiFeatures.js';
 
 import { errorHandler } from '../../middlewares/error-handling.middleware.js';
-
 export const getAllCompanies = errorHandler(async (req, res, next) => {
   const obj = new APIFEATURES(req.query, Company.find())
     .filter()
@@ -70,5 +69,24 @@ export const deleteCompany = errorHandler(async (req, res, next) => {
   res.status(204).json({
     status: 'success',
     data: null,
+  });
+});
+
+// get top five companies based on net profit
+export const getTopCompanies = errorHandler(async (req, res, next) => {
+  const topCompanies = await Company.aggregate([
+    {
+      $sort: { netProfit: -1 },
+    },
+    {
+      $project: { companyName: 1, comapnyPhoto: 1, netProfit: 1, _id: 0 },
+    },
+    {
+      $limit: 5,
+    },
+  ]);
+  res.status(200).json({
+    status: 'success',
+    topCompanies,
   });
 });

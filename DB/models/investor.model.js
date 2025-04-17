@@ -5,10 +5,17 @@ import bcryptjs from 'bcryptjs';
 
 const investorSchema = new mongoose.Schema(
   {
-    fullname: {
+    fullArabicName: {
+      type: String,
+      minlength: 2,
+      maxlength: 30,
+      required: [true, 'investors should have a name'],
+      trim: true,
+    },
+    fullEnglishName: {
       type: String,
       minlength: 3,
-      maxlength: 30,
+      maxlength: 50,
       required: [true, 'investors should have a name'],
       trim: true,
     },
@@ -16,10 +23,10 @@ const investorSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Company',
     },
-    age: {
-      type: Number,
-      required: [true, 'provide your age'],
-    },
+    // age: {
+    //   type: Number,
+    //   required: [true, 'provide your age'],
+    // },
     phoneNumber: {
       type: String,
       required: [true, 'provide phone number'],
@@ -60,74 +67,116 @@ const investorSchema = new mongoose.Schema(
         message: 'password and passwordConfirm are not the same',
       },
     },
-    nationality: {
-      type: String,
-      required: [true, 'provide your nationality'],
-    },
-    interests: {
+    // nationality: {
+    //   type: String,
+    //   required: [true, 'provide your nationality'],
+    // },
+    investmentfields: {
       type: Array,
       validate: {
         validator: function (val) {
           return val.length > 0;
         },
-        message: 'you shoud provide at least one interest',
+        message: 'you shoud provide at least one field',
       },
     },
-    bio: {
+    investmentStage: {
       type: String,
-      required: [true, 'provide your Bio'],
+      enum: {
+        values: [
+          'Pre-Seed',
+          'Seed',
+          'Series A',
+          'Series B',
+          'Late Stage / IPO',
+          'All the mentions',
+        ],
+        message: `your stage {VALUE} must be from these ['Pre-Seed' , 'Seed' , 'Series A' , 'Series B' , 'Late Stage / IPO' , 'All the mentions']`,
+      },
+      required: [true, 'please provide your investment stage'],
     },
-    ssn: {
+    // bio: {
+    //   type: String,
+    //   required: [true, 'provide your Bio'],
+    // },
+    // ssn: {
+    //   type: String,
+    //   // required: [true, 'provide your SSN'],
+    //   // unique: true,
+    //   validate: {
+    //     validator: function (val) {
+    //       const ssnRegex = /^[0-9]{3}-[0-9]{2}-[0-9]{4}$/;
+    //       return validator.matches(val, ssnRegex) && val !== '000-00-0000';
+    //     },
+    //     message: `(VALUE) is not valid SSN`,
+    //   },
+    // },
+    idNumber: {
       type: String,
-      required: [true, 'provide your SSN'],
       unique: true,
+      required: [
+        true,
+        'please provide your national id number or passport number',
+      ],
       validate: {
-        validator: function (val) {
-          const ssnRegex = /^[0-9]{3}-[0-9]{2}-[0-9]{4}$/;
-          return validator.matches(val, ssnRegex) && val !== '000-00-0000';
+        validator: function (value) {
+          const nationalId = /^[0-9]{8,18}$/;
+          const passwortId = /^[A-Z0-9]{6,9}$/;
+          return nationalId.test(value) || passwortId.test(value);
         },
-        message: `(VALUE) is not valid SSN`,
+        message: `Invalid ID. Must be a valid National ID (8-18 digits) based on your country or Passport Number (6-9 alphanumeric characters).`,
       },
+    },
+    investmentLicenseNumber: {
+      type: String,
+      unique: true,
+      required: [true, 'please tell us your investment license number'],
+      match: /^[A-Z0-9-]{8,20}$/,
+      minlength: [8, 'investmentLicenseNumber must not below 8 characters'],
+      maxlength: [20, 'investmentLicenseNumber must not above 20 characters'],
     },
     profilePhoto: String,
     role: {
       type: String,
       default: 'investor',
     },
-    idCardPhoto: {
-      type: String,
-      required: [true, 'provide your card photo'],
-    },
-    taxNumber: {
-      type: String,
-      required: [true, 'provide your tax number'],
-      unique: true,
-      validate: {
-        validator: function (val) {
-          const taxNumberRegex = /^[A-Za-z0-9-]+$/;
-          return validator.matches(val, taxNumberRegex);
-        },
-        message: `your tax number (VALUE) is not valid`,
-      },
-    },
+    // idCardPhoto: {
+    //   type: String,
+    //   required: [true, 'provide your card photo'],
+    // },
+    // taxNumber: {
+    //   type: String,
+    //   required: [true, 'provide your tax number'],
+    //   unique: true,
+    //   validate: {
+    //     validator: function (val) {
+    //       const taxNumberRegex = /^[A-Za-z0-9-]+$/;
+    //       return validator.matches(val, taxNumberRegex);
+    //     },
+    //     message: `your tax number (VALUE) is not valid`,
+    //   },
+    // },
     points: {
       type: Number,
       default: 0,
       min: [0, 'The gained points should not be below zero'],
     },
-    socialLinks: {
-      type: Map, // like object js    ex { linkedin : https://kjksjdkc.com}
-      of: String, // key of the object
-      required: [true, 'provide social links'],
-      validate: {
-        validator: function (val) {
-          return val.size > 0;
-        },
-        message: 'provide at least one social link',
-      },
-      default: {},
+    // socialLinks: {
+    //   type: Map, // like object js    ex { linkedin : https://kjksjdkc.com}
+    //   of: String, // key of the object
+    //   required: [true, 'provide social links'],
+    //   validate: {
+    //     validator: function (val) {
+    //       return val.size > 0;
+    //     },
+    //     message: 'provide at least one social link',
+    //   },
+    //   default: {},
+    // },
+    organization: {
+      type: [String],
+      required: [true, 'please provide your orginzation!'],
     },
-    organization: [String],
     jobTitle: {
       type: String,
       required: [true, 'provide your job title.'],
@@ -137,10 +186,18 @@ const investorSchema = new mongoose.Schema(
       required: [true, 'provide your available budget'],
       min: [0, 'budget can not be below zero'],
     },
-    proofPhoto: {
+    currency: {
       type: String,
-      required: [true, 'provide your proof photo.'],
+      enum: {
+        values: ['EGP', 'USD', 'EUR', 'SAR', 'AED'],
+        message: `your curreny {VALUE} must be from ['EGP' , 'USD' , 'EUR' , 'SAR', 'AED']`,
+      },
+      required: [true, 'please provide currency'],
     },
+    // proofPhoto: {
+    //   type: String,
+    //   required: [true, 'provide your proof photo.'],
+    // },
     acceptedByAdmin: Boolean,
     createdAt: {
       type: Date,
