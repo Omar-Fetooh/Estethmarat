@@ -10,7 +10,7 @@ export const register = errorHandler(async (req, res, next) => {
   // register new investor
   const newInvestor = await Investor.create(req.body);
   // create token
-  const token = createTokenAndSendCookie(newInvestor._id, res);
+  const token = createTokenAndSendCookie(newInvestor._id, newInvestor.role,  res);
   // to prevent send password in response
   newInvestor.password = undefined;
   // send response
@@ -92,11 +92,12 @@ export const deleteInvestor = errorHandler(async (req, res, next) => {
     data: null,
   });
 });
-
-// get top 3 investors based on points
+// get top three investors based on their points
 export const getTopInvestors = errorHandler(async (req, res, next) => {
   const topInvestors = await Investor.aggregate([
-    { $sort: { points: -1 } },
+    {
+      $sort: { points: -1 },
+    },
     {
       $project: {
         fullArabicName: 1,

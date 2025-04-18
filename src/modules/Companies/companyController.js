@@ -1,6 +1,7 @@
 import { Company } from '../../../DB/models/index.js';
 import { AppError } from '../../Utils/AppError.js';
 import { APIFEATURES } from '../../Utils/apiFeatures.js';
+import { createTokenAndSendCookie } from '../auth/authController.js';
 
 import { errorHandler } from '../../middlewares/error-handling.middleware.js';
 export const getAllCompanies = errorHandler(async (req, res, next) => {
@@ -21,11 +22,13 @@ export const getAllCompanies = errorHandler(async (req, res, next) => {
 });
 export const createCompany = errorHandler(async (req, res, next) => {
   const newCompany = await Company.create(req.body);
+  const token = createTokenAndSendCookie(newCompany._id, newCompany.role, res);
   newCompany.password = undefined;
   res.status(201).json({
     status: 'success',
     data: {
       company: newCompany,
+      token,
     },
   });
 });
@@ -71,8 +74,7 @@ export const deleteCompany = errorHandler(async (req, res, next) => {
     data: null,
   });
 });
-
-// get top five companies based on net profit
+// get top five companines based on their net profit
 export const getTopCompanies = errorHandler(async (req, res, next) => {
   const topCompanies = await Company.aggregate([
     {

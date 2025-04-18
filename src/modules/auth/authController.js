@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // import crypto from 'crypto';
 // import jwt from 'jsonwebtoken';
 // import { errorHandler } from '../../middlewares/error-handling.middleware.js';
@@ -11,13 +12,15 @@ import { errorHandler } from '../../middlewares/error-handling.middleware.js';
 import { AppError } from '../../Utils/AppError.js';
 import { Investor } from '../../../DB/models/investor.model.js';
 import { Company } from '../../../DB/models/company.model.js';
-import { Organization } from '../../../DB/models/organization.model.js';
+import { CharityOrganization } from '../../../DB/models/charityOrganization.model.js';
+import { supportOrganization } from '../../../DB/models/supportOrganization.model.js';
+
 import { sendEmail } from '../../Utils/sendEmail.js';
 import { decode } from 'punycode';
-
-export const createTokenAndSendCookie = (id, res) => {
+import multer from 'multer';
+export const createTokenAndSendCookie = (id, role, res) => {
   // create token
-  const token = jwt.sign({ id }, process.env.SECRET_KEY, {
+  const token = jwt.sign({ id, role }, process.env.SECRET_KEY, {
     expiresIn: process.env.EXPIRES_IN,
   });
   // some options for cookie
@@ -141,6 +144,7 @@ export const createTokenAndSendCookie = (id, res) => {
 //     message: 'logged out successfully',
 //   });
 // });
+export const upload = multer();
 // login
 export const login = errorHandler(async (req, res, next) => {
   // console.log(req.originalUrl)
@@ -152,7 +156,8 @@ export const login = errorHandler(async (req, res, next) => {
   const allModels = [
     { mod: Company },
     { mod: Investor },
-    { mod: Organization },
+    { mod: CharityOrganization },
+    { mod: supportOrganization },
   ];
   let returnedModel;
   await Promise.all(
@@ -166,12 +171,11 @@ export const login = errorHandler(async (req, res, next) => {
   );
   // 2) get investor based on email from database
   const user = await returnedModel.findOne({ email }).select('+password');
-  console.log(user);
   // 3) check if input password mathing one in database
   if (!user || !(await user.correctPassword(password, user.password)))
     return next(new AppError('email or password are not correct', 400));
   // 4) login and send token
-  const token = createTokenAndSendCookie(user._id, res);
+  const token = createTokenAndSendCookie(user._id, user.role, res);
   // hide password from response
   user.password = undefined;
   res.status(200).json({
@@ -192,7 +196,8 @@ export const forgotPassword = errorHandler(async (req, res, next) => {
   const allModels = [
     { mod: Company },
     { mod: Investor },
-    { mod: Organization },
+    { mod: CharityOrganization },
+    { mod: supportOrganization },
   ];
   let returnedModel;
   await Promise.all(
@@ -243,7 +248,8 @@ export const resetPassword = errorHandler(async (req, res, next) => {
   const allModels = [
     { mod: Company },
     { mod: Investor },
-    { mod: Organization },
+    { mod: CharityOrganization },
+    { mod: supportOrganization },
   ];
   let returnedModel;
   await Promise.all(
@@ -273,7 +279,7 @@ export const resetPassword = errorHandler(async (req, res, next) => {
   // 3) update password changedat properity
   // done by pre save hook
   // 4) login user and send token
-  const token = createTokenAndSendCookie(user._id, res);
+  const token = createTokenAndSendCookie(user._id, user.role, res);
   res.status(200).json({
     status: 'success',
     message: 'password has been updated successfully',
@@ -313,13 +319,12 @@ export const protect = errorHandler(async (req, res, next) => {
     return next(new AppError('you are not logged in, please login again', 401));
   // verify token
   const decoded = await promisify(jwt.verify)(token, process.env.SECRET_KEY);
-  console.log(decoded);
-
   // select correct model
   const allModels = [
     { mod: Company },
     { mod: Investor },
-    { mod: Organization },
+    { mod: CharityOrganization },
+    { mod: supportOrganization },
   ];
   let returnedModel;
   await Promise.all(

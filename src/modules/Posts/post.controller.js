@@ -62,8 +62,6 @@ export const updatePostById = async (req, res, next) => {
     return next(new AppError('post not found', 404));
   }
 
-  console.log(title);
-
   if (title) {
     post.title = title;
   }

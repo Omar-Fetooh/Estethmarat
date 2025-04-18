@@ -4,11 +4,12 @@ import {
   login,
   logout,
   resetPassword,
+  upload,
 } from './authController.js';
 
 export const authRouter = Router();
 
-authRouter.post('/login', login);
-authRouter.post('/forgotPassword', forgotPassword);
+authRouter.post('/login', upload.none(), login);
+authRouter.post('/forgotPassword', upload.none(), forgotPassword);
 authRouter.patch('/resetPassword', resetPassword);
 authRouter.get('/logout', logout);

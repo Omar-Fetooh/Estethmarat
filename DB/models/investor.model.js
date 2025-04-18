@@ -23,10 +23,7 @@ const investorSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Company',
     },
-    // age: {
-    //   type: Number,
-    //   required: [true, 'provide your age'],
-    // },
+
     phoneNumber: {
       type: String,
       required: [true, 'provide phone number'],
@@ -67,10 +64,7 @@ const investorSchema = new mongoose.Schema(
         message: 'password and passwordConfirm are not the same',
       },
     },
-    // nationality: {
-    //   type: String,
-    //   required: [true, 'provide your nationality'],
-    // },
+
     investmentfields: {
       type: Array,
       validate: {
@@ -95,22 +89,7 @@ const investorSchema = new mongoose.Schema(
       },
       required: [true, 'please provide your investment stage'],
     },
-    // bio: {
-    //   type: String,
-    //   required: [true, 'provide your Bio'],
-    // },
-    // ssn: {
-    //   type: String,
-    //   // required: [true, 'provide your SSN'],
-    //   // unique: true,
-    //   validate: {
-    //     validator: function (val) {
-    //       const ssnRegex = /^[0-9]{3}-[0-9]{2}-[0-9]{4}$/;
-    //       return validator.matches(val, ssnRegex) && val !== '000-00-0000';
-    //     },
-    //     message: `(VALUE) is not valid SSN`,
-    //   },
-    // },
+
     idNumber: {
       type: String,
       unique: true,
@@ -140,39 +119,13 @@ const investorSchema = new mongoose.Schema(
       type: String,
       default: 'investor',
     },
-    // idCardPhoto: {
-    //   type: String,
-    //   required: [true, 'provide your card photo'],
-    // },
-    // taxNumber: {
-    //   type: String,
-    //   required: [true, 'provide your tax number'],
-    //   unique: true,
-    //   validate: {
-    //     validator: function (val) {
-    //       const taxNumberRegex = /^[A-Za-z0-9-]+$/;
-    //       return validator.matches(val, taxNumberRegex);
-    //     },
-    //     message: `your tax number (VALUE) is not valid`,
-    //   },
-    // },
+
     points: {
       type: Number,
       default: 0,
       min: [0, 'The gained points should not be below zero'],
     },
-    // socialLinks: {
-    //   type: Map, // like object js    ex { linkedin : https://kjksjdkc.com}
-    //   of: String, // key of the object
-    //   required: [true, 'provide social links'],
-    //   validate: {
-    //     validator: function (val) {
-    //       return val.size > 0;
-    //     },
-    //     message: 'provide at least one social link',
-    //   },
-    //   default: {},
-    // },
+
     organization: {
       type: [String],
       required: [true, 'please provide your orginzation!'],
@@ -194,10 +147,7 @@ const investorSchema = new mongoose.Schema(
       },
       required: [true, 'please provide currency'],
     },
-    // proofPhoto: {
-    //   type: String,
-    //   required: [true, 'provide your proof photo.'],
-    // },
+
     acceptedByAdmin: Boolean,
     createdAt: {
       type: Date,
@@ -257,5 +207,4 @@ investorSchema.methods.passwordChangeAfter = function (issuedTimeStamp) {
   }
   return false;
 };
-
 export const Investor = mongoose.model('Investor', investorSchema);

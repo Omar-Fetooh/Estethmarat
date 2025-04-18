@@ -1,36 +1,32 @@
 import { AppError } from '../Utils/index.js';
-
 // handle cast error
 const handleCastError = (err) => {
-  return new AppError(`invalid id ${err.value}, please provide valid id`, 400);
+  return new AppError(`can't convert ${err.value} into a valid id`, 400);
 };
-
-// handle duplication error
-const handelDuplicationError = (err) => {
-  const message = err.errorResponse.errmsg.match(/\{([^}]+)\}/)[1];
-  return new AppError(`duplication error: ${message}`, 400);
+// handle dublicate error
+const handleDublicateError = (err) => {
+  const regex = /\{([^}]+)\}/;
+  const msg = err.errorResponse.errmsg;
+  return new AppError(`Dublication error in ${msg.match(regex)[1]}`, 400);
 };
-
 // handle validation error
 const handleValidationError = (err) => {
+  // push all messages error to this array
   let arr = [];
-  for (let obj of Object.values(err.errors)) arr.push(obj.properties.message);
-  return new AppError(`${arr.join()}`, 400);
+  for (let ele of Object.values(err.errors)) {
+    arr.push(ele.properties.message);
+  }
+  const msgs = arr.join(',');
+  return new AppError(msgs, 400);
 };
-
-// handle expired error
-const handleExpiredError = (err) => {
-  return new AppError(
-    'your token has been expired. please loginin again!',
-    401
-  );
+// handle expiration date of jwt
+const handelExpirationToken = (err) => {
+  return new AppError('Your token has been expired, please login again', 401);
 };
-
-// handle json web token error
-const handleJsonWebTokenError = (err) => {
-  return new AppError('invalid signature of jwt, please login in again!', 401);
+// handle invalid signature for jwt
+const handleInvalidSignature = (err) => {
+  return new AppError('Invalid signature of jwt, please login again', 401);
 };
-
 // error in development
 const sendDevError = (err, res) => {
   res.status(err.statusCode).json({
@@ -55,25 +51,23 @@ export const globalMiddleware = (err, req, res, next) => {
   // set values if not exists
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';
-
   // send error in development
   if (process.env.NODE_ENV === 'development') {
-    // send error in development
+    // send error in development=
     sendDevError(err, res);
     // send error in production
   } else if (process.env.NODE_ENV === 'production') {
-    // handle cast error
-    if (err.name === 'CastError') err = handleCastError(err);
-    // handle duplaction error
-    if (err.code === 11000) err = handelDuplicationError(err);
-    // handle validation error
+    // 1) handle cast error
+    if (err.name === 'CastError') {
+      err = handleCastError(err);
+    }
+    // 2) handle dublicate error
+    if (err.code === 11000) err = handleDublicateError(err);
     if (err.name === 'ValidationError') err = handleValidationError(err);
-    // handel expired error
-    if (err.name === 'TokenExpiredError') err = handleExpiredError(err);
-    // handle json web token error
-    if (err.name === 'JsonWebTokenError') err = handleJsonWebTokenError(err);
-    // if error is operational
+    if (err.name === 'TokenExpiredError') err = handelExpirationToken(err);
+    if (err.name === 'JsonWebTokenError') err = handleInvalidSignature(err);
     if (err.isOperational) {
+      // if error is operational
       // send error in production
       sendProdError(err, res);
       // send generic message

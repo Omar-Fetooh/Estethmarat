@@ -11,14 +11,14 @@ export class APIFEATURES {
     const queryObjCopy = { ...this.queryStr };
     // start of filter
     privateFields.forEach((el) => delete queryObjCopy[el]);
-    console.log(queryObjCopy);
+
     const queryString = JSON.stringify(queryObjCopy);
     const filterObjString = queryString.replace(
       /\b(gte|gt|lte|lt)\b/g,
       (matched) => `$${matched}`
     );
     const filterObj = JSON.parse(filterObjString);
-    console.log(filterObj);
+
     this.query = this.query.find(filterObj);
     return this;
   }
@@ -35,9 +35,7 @@ export class APIFEATURES {
   // sort fields
   sortFields() {
     if (this.queryStr.sort) {
-      console.log(this.query);
       const sortFields = this.queryStr.sort.split(',').join(' ');
-      console.log(sortFields);
       this.query = this.query.sort(sortFields);
     } else {
       this.query = this.query.sort('-createdAt');
@@ -52,4 +50,3 @@ export class APIFEATURES {
     return this;
   }
 }
-
