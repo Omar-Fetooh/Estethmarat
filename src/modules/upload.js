@@ -25,7 +25,7 @@ export const uploadCompanyPhoto = upload.fields([
     name: 'financialReportPDF',
     maxCount: 1,
   },
-  { name: 'videoLink', maxCount: 1 },
+  { name: 'bmc', maxCount: 1 },
 ]);
 
 export const uploadInvestorPhoto = upload.single('profilePhoto');
@@ -71,13 +71,13 @@ export const imageProcessing = async (req, res, next) => {
       );
       req.body.financialReportPDF = pdfUrl;
     }
-    if (req.files && req.files.videoLink) {
-      const videoUrl = await uploadImageToCloudinary(
-        req.files.videoLink[0].buffer,
-        'video',
-        req.files.videoLink[0].originalName
+    if (req.files && req.files.bmc) {
+      const bmcUrl = await uploadImageToCloudinary(
+        req.files.bmc[0].buffer,
+        'raw',
+        req.files.bmc[0].fieldname
       );
-      req.body.videoLink = videoUrl;
+      req.body.bmc = bmcUrl;
     }
     if (req.file) {
       const prossedPhoto = await sharp(req.file.buffer)

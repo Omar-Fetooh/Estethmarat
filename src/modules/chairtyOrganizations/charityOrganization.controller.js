@@ -244,7 +244,7 @@ export const updateCharityOrganization = async (req, res, next) => {
   if (headQuarter) charityOrganization.headQuarter = headQuarter;
   if (bankAccountNumber)
     charityOrganization.bankAccountNumber = bankAccountNumber;
-  if (sector) charityOrganization.sector = sector;
+  // if (sector) charityOrganization.sector = sector;
   if (registrationNumber)
     charityOrganization.registrationNumber = registrationNumber;
   if (targetFundingValue)

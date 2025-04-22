@@ -37,11 +37,6 @@ const supportOrganizationSchema = new Schema(
         unique: true,
       },
     },
-    customId: {
-      type: String,
-      required: true,
-      unique: true,
-    },
     email: {
       type: String,
       required: true,
@@ -49,9 +44,17 @@ const supportOrganizationSchema = new Schema(
       match: [/^\S+@\S+\.\S+$/, 'email is invalid'],
       required: [true, 'email is required'],
     },
+    notification: {
+      type: Boolean,
+      default: true,
+      required: true,
+    },
     phoneNumber: { type: String, required: true },
-    website: { type: String, match: [/^https?:\/\/.+/, 'Invalid URL format'] },
-    // location: { type: String, required: true },
+    website: {
+      type: String,
+      match: [/^https?:\/\/.+/, 'Invalid URL format'],
+      required: true,
+    },
     password: { type: String, required: true, trim: true, minLength: 6 },
     supportedProjectFields: {
       type: [String],
@@ -131,7 +134,7 @@ const supportOrganizationSchema = new Schema(
       ],
     },
     // supportedProjectsCount: { type: Number, default: 0 },
-    targetFundingValue: { type: Number, required: true },
+    targetFundingValue: { type: Number },
     supportTypes: {
       type: [String],
       required: true,
@@ -161,18 +164,18 @@ const supportOrganizationSchema = new Schema(
       ],
     },
 
-    providedPrograms: { type: String },
+    providedPrograms: { type: String, required: true },
     commercialRegistrationNumber: {
       type: String,
       required: true,
       unique: true,
     },
-    taxIdNumber: { type: String, required: true },
+    taxIdNumber: { type: String },
     representativeName: { type: String, required: true },
     representativeEmail: { type: String, required: true },
     representativeNationalId: { type: String, required: true },
-    description: { type: String },
-    numberOfProjectsSupported: { type: Number },
+    description: { type: String, required: true },
+    numberOfProjectsSupported: { type: Number, required: true },
     role: {
       type: String,
       default: 'supportOrganization',
@@ -391,6 +394,7 @@ const supportOrganizationSchema = new Schema(
     acceptNotifications: {
       type: Boolean,
       default: false,
+      required: true,
     },
     acceptedByAdmin: {
       type: Boolean,

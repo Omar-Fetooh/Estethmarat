@@ -46,10 +46,10 @@ const charityOrganizationSchema = new Schema(
       public_id: { type: String, required: true },
       secure_url: { type: String, required: true, unique: true },
     },
-    customId: {
-      type: String,
+    notification: {
+      type: Boolean,
+      default: true,
       required: true,
-      unique: true,
     },
     email: {
       type: String,
@@ -59,7 +59,11 @@ const charityOrganizationSchema = new Schema(
       required: [true, 'email is required'],
     },
     phoneNumber: { type: String, required: true },
-    website: { type: String, match: [/^https?:\/\/.+/, 'Invalid URL format'] },
+    website: {
+      type: String,
+      match: [/^https?:\/\/.+/, 'Invalid URL format'],
+      required: true,
+    },
     password: { type: String, required: true, trim: true, minLength: 6 },
     projectTypes: {
       type: [String],

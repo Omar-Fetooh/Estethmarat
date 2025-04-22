@@ -13,11 +13,10 @@ const companySchema = new mongoose.Schema({
   taxIdNumber: {
     type: String,
     unique: true,
-    required: [true, 'Please enter the taxIdNumber for this company!'],
   },
   representativeName: {
     type: String,
-    required: true,
+    required: [true, 'Enter the representative name for the company!'],
   },
   representativeEmail: {
     type: String,
@@ -30,10 +29,6 @@ const companySchema = new mongoose.Schema({
   nationalId: {
     type: String,
     required: [true, 'Please enter the your national id now!'],
-    unique: true,
-  },
-  passportNumber: {
-    type: String,
     unique: true,
   },
   investmentAmount: {
@@ -90,9 +85,8 @@ const companySchema = new mongoose.Schema({
     default: 0,
   },
   breakEvenPoint: {
-    type: Number,
+    type: Date,
     required: [true, 'Enter the break Even Point!'],
-    default: 0,
   },
   financialReportPDF: {
     type: String,
@@ -102,7 +96,6 @@ const companySchema = new mongoose.Schema({
     type: String,
     required: [true, 'Enter the required services of this company!'],
   },
-  serviceDescription: String,
   exitStrategy: {
     type: String,
     enum: {
@@ -117,8 +110,12 @@ const companySchema = new mongoose.Schema({
       message:
         '{VALUE} is not defined, please choose the valid value from select box!',
     },
+    required: [true, 'Select the exit strategy for this company!'],
   },
-  expectedProfitPerYear: String,
+  expectedProfitPerYear: {
+    type: String,
+    required: [true, 'Enter expected Profit PerYear'],
+  },
   risksAndDifficults: [String],
   companyDescription: {
     type: String,
@@ -168,10 +165,9 @@ const companySchema = new mongoose.Schema({
     },
     required: [true, 'Please select one value!'],
   },
-  offeredServices: String,
-  companyNumber: {
-    type: String,
-    required: [true, 'Please enter the phone of this company!'],
+  offeredServices: {
+    type: Object,
+    required: [true, 'Enter the offered services'],
   },
   currentClerksNumber: {
     type: String,
@@ -184,11 +180,15 @@ const companySchema = new mongoose.Schema({
   foundationDate: {
     type: Date,
     required: [true, 'Enter the foundation date now!'],
-    default: Date.now(),
   },
-  partnerShip: String,
-  businessPlan: String,
-  videoLink: String,
+  partnerShip: {
+    type: String,
+    required: [true],
+  },
+  videoLink: {
+    type: String,
+    required: [true],
+  },
   companyName: {
     type: String,
     required: [true, 'Enter the name for this company here!'],
@@ -202,7 +202,7 @@ const companySchema = new mongoose.Schema({
     trim: true,
   },
   companyField: {
-    type: String,
+    type: [String],
     enum: {
       values: [
         'الذكاء الاصطناعي والتعلم الآلي',
@@ -295,7 +295,10 @@ const companySchema = new mongoose.Schema({
       message: 'Select valid value from select box!',
     },
   },
-  companyPhoto: String,
+  companyPhoto: {
+    type: String,
+    required: [true],
+  },
   email: {
     type: String,
     required: [true, 'Enter a valid email for this company now!'],
@@ -550,15 +553,10 @@ const companySchema = new mongoose.Schema({
       message: 'Select the headQuarter for your compant now!',
     },
   },
-  expenses: Number,
-  // companyLocation: {
-  //   type: {
-  //     type: String,
-  //     default: 'Point',
-  //     enum: ['Point'],
-  //   },
-  //   coordinates: [Number],
-  // },
+  bmc: {
+    type: String,
+    required: [true, 'upload the bmc for this company!'],
+  },
   password: {
     type: String,
     required: [true, 'Please enter password for company'],
@@ -579,11 +577,27 @@ const companySchema = new mongoose.Schema({
     type: String,
     default: 'company',
   },
+  notification: {
+    type: Boolean,
+    default: true,
+    required: [true, 'Please select the notification for this company!'],
+  },
   passwordResetToken: String,
   passwordResetTokenExpires: Date,
   passwordChangedAt: Date,
 });
-
+// convert the offered services into suitable object
+companySchema.pre('save', function (next) {
+  let servicesKeys = Object.keys(this.offeredServices);
+  let servicesValues = Object.values(this.offeredServices);
+  servicesKeys = servicesKeys.map((key) =>
+    Buffer.from(key, 'latin1').toString('utf8')
+  );
+  let newObj = {};
+  servicesKeys.forEach((ele, index) => (newObj[ele] = servicesValues[index]));
+  this.offeredServices = newObj;
+  next();
+});
 companySchema.pre('save', async function (next) {
   // ask for if password has been modified or not
   if (!this.isModified('password')) return next();
