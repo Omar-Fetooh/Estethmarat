@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import bcryptjs from 'bcryptjs';
 import crypto from 'crypto';
+import { json } from 'stream/consumers';
 const { Schema, model } = mongoose;
 
 const organizationSchema = new Schema(
@@ -123,6 +124,7 @@ const organizationSchema = new Schema(
 // organizationSchema.index({ typeOfOrganization: 1, location: 1 });
 // change passwordChangeAt properity
 // encrypt password
+
 organizationSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
   this.password = await bcryptjs.hash(this.password, 12);

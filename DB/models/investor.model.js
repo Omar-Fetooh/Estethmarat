@@ -242,7 +242,10 @@ const investorSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
+investorSchema.pre('validate', function (next) {
+  this.investmentfields = [...JSON.parse(this.investmentfields)];
+  next();
+});
 // encrypt password
 investorSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();

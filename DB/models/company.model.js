@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
-import { type } from 'os';
 
 const companySchema = new mongoose.Schema({
   registrationNumber: {
@@ -93,7 +92,7 @@ const companySchema = new mongoose.Schema({
     required: [true, 'Upload the pdf for financial report!'],
   },
   requiredServices: {
-    type: String,
+    type: Object,
     required: [true, 'Enter the required services of this company!'],
   },
   exitStrategy: {
@@ -116,7 +115,10 @@ const companySchema = new mongoose.Schema({
     type: String,
     required: [true, 'Enter expected Profit PerYear'],
   },
-  risksAndDifficults: [String],
+  risksAndDifficults: {
+    type: String,
+    required: [true, 'Enter the risks and difficulties for this company!'],
+  },
   companyDescription: {
     type: String,
     maxlength: [
@@ -166,7 +168,7 @@ const companySchema = new mongoose.Schema({
     required: [true, 'Please select one value!'],
   },
   offeredServices: {
-    type: Object,
+    type: String,
     required: [true, 'Enter the offered services'],
   },
   currentClerksNumber: {
@@ -586,16 +588,9 @@ const companySchema = new mongoose.Schema({
   passwordResetTokenExpires: Date,
   passwordChangedAt: Date,
 });
-// convert the offered services into suitable object
-companySchema.pre('save', function (next) {
-  let servicesKeys = Object.keys(this.offeredServices);
-  let servicesValues = Object.values(this.offeredServices);
-  servicesKeys = servicesKeys.map((key) =>
-    Buffer.from(key, 'latin1').toString('utf8')
-  );
-  let newObj = {};
-  servicesKeys.forEach((ele, index) => (newObj[ele] = servicesValues[index]));
-  this.offeredServices = newObj;
+companySchema.pre('validate', function (next) {
+  this.companyField = [...JSON.parse(this.companyField)];
+  this.requiredServices = { ...JSON.parse(this.requiredServices) };
   next();
 });
 companySchema.pre('save', async function (next) {

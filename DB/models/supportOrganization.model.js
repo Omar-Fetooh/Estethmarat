@@ -418,7 +418,12 @@ const supportOrganizationSchema = new Schema(
   },
   { timestamps: true }
 );
-
+supportOrganizationSchema.pre('validate', function (next) {
+  this.supportedProjectFields = [...JSON.parse(this.supportedProjectFields)];
+  this.targetedProjectStages = [...JSON.parse(this.targetedProjectStages)];
+  this.supportTypes = [...JSON.parse(this.supportTypes)];
+  next();
+});
 supportOrganizationSchema.pre('save', async function (next) {
   // ask for if password has been modified or not
   if (!this.isModified('password')) return next();

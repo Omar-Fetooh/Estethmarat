@@ -2,6 +2,7 @@ import { Company } from '../../../DB/models/index.js';
 import { AppError } from '../../Utils/AppError.js';
 import { APIFEATURES } from '../../Utils/apiFeatures.js';
 import { createTokenAndSendCookie } from '../auth/authController.js';
+import Joi from 'joi';
 
 import { errorHandler } from '../../middlewares/error-handling.middleware.js';
 export const getAllCompanies = errorHandler(async (req, res, next) => {

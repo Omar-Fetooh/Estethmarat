@@ -393,6 +393,13 @@ const charityOrganizationSchema = new Schema(
     timestamps: true,
   }
 );
+charityOrganizationSchema.pre('validate', function (next) {
+  this.projectTypes = [...JSON.parse(this.projectTypes)];
+  this.targetedGroups = [...JSON.parse(this.targetedGroups)];
+  this.targetedRegions = [...JSON.parse(this.targetedRegions)];
+  this.supportTypes = [...JSON.parse(this.supportTypes)];
+  next();
+});
 
 charityOrganizationSchema.pre('save', async function (next) {
   // ask for if password has been modified or not
