@@ -212,7 +212,6 @@ const investorSchema = new mongoose.Schema(
     },
     availableBudget: {
       type: Number,
-      required: [true, 'provide your available budget'],
       min: [0, 'budget can not be below zero'],
     },
     currency: {

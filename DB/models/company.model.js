@@ -69,12 +69,12 @@ const companySchema = new mongoose.Schema({
     minlength: 20,
   },
   annualRevenue: {
-    type: Number,
+    type: String,
     min: 0,
     required: [true, 'Enter the annual revenue for this company!'],
   },
   netProfit: {
-    type: Number,
+    type: String,
     required: [true, 'Enter the net profit number!'],
     default: 0,
   },
@@ -97,18 +97,6 @@ const companySchema = new mongoose.Schema({
   },
   exitStrategy: {
     type: String,
-    enum: {
-      values: [
-        'الاستحواذ',
-        'الاندماج',
-        'الطرح العام الأولي',
-        'التصفية',
-        'البيع لمستثمر استراتيجي أو شريك',
-        'استرداد الأسهم',
-      ],
-      message:
-        '{VALUE} is not defined, please choose the valid value from select box!',
-    },
     required: [true, 'Select the exit strategy for this company!'],
   },
   expectedProfitPerYear: {
@@ -195,8 +183,8 @@ const companySchema = new mongoose.Schema({
     type: String,
     required: [true, 'Enter the name for this company here!'],
     trim: true,
-    maxlength: [40, 'A company name must be less or equal 40 characters'],
-    minlength: [10, 'A company name must be greater or equal 10 characters'],
+    maxlength: [35, 'A company name must be less or equal 40 characters'],
+    minlength: [2, 'A company name must be greater or equal 10 characters'],
   },
   socialName: {
     type: String,
@@ -310,29 +298,10 @@ const companySchema = new mongoose.Schema({
   companyPhoneNumber: {
     type: String,
     required: [true, 'Please enter the phone for this company now!'],
-    enum: {
-      values: [
-        '+973',
-        '+357',
-        '+20',
-        '+98',
-        '+964',
-        '+972',
-        '+962',
-        '+965',
-        '+961',
-        '+968',
-        '+970',
-        '+974',
-        '+966',
-        '+963',
-        '+90',
-        '+971',
-        '+967',
-        '+357',
-      ],
-      message: 'Select phone code from this select box now!',
-    },
+    match: [
+      /^\+\d{6,15}$/,
+      'Phone number must start with "+" and be 6 to 15 digits long',
+    ],
   },
   websiteUrl: {
     type: String,
