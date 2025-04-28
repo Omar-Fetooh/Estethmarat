@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
 const questionSchema = new mongoose.Schema({
-  amount: {
-    type: Number,
-    default: 0,
-    required: [true, 'specify the amount !'],
-    min: 0,
-  },
+  // amount: {
+  //   type: Number,
+  //   default: 0,
+  //   required: [true, 'specify the amount !'],
+  //   min: 0,
+  // },
   company: {
     type: mongoose.Schema.ObjectId,
     ref: 'Company',
@@ -23,7 +23,7 @@ const questionSchema = new mongoose.Schema({
   },
   answerText: {
     type: String,
-    required: [true, 'specify your answer for your question'],
+    // required: [true, 'specify your answer for your question'],
     minlength: 0,
   },
   status: {

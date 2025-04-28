@@ -58,3 +58,4 @@ export const deleteDeal = errorHandler(async (req, res, next) => {
     data: null,
   });
 });
+

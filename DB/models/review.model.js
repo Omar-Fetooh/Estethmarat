@@ -28,7 +28,7 @@ const reviewSchema = new Schema(
     feedback: {
       type: String,
       trim: true,
-      required: [true, 'feedback is required'],
+      // required: [true, 'feedback is required'],
     },
   },
   { timestamps: true }

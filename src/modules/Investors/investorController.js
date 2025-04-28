@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { Investor } from '../../../DB/models/index.js';
+import { Deal, Investor } from '../../../DB/models/index.js';
 import { AppError } from '../../Utils/AppError.js';
 import { createTokenAndSendCookie } from '../auth/authController.js';
 import { APIFEATURES } from '../../Utils/apiFeatures.js';
@@ -10,7 +10,11 @@ export const register = errorHandler(async (req, res, next) => {
   // register new investor
   const newInvestor = await Investor.create(req.body);
   // create token
-  const token = createTokenAndSendCookie(newInvestor._id, newInvestor.role,  res);
+  const token = createTokenAndSendCookie(
+    newInvestor._id,
+    newInvestor.role,
+    res
+  );
   // to prevent send password in response
   newInvestor.password = undefined;
   // send response
@@ -116,3 +120,28 @@ export const getTopInvestors = errorHandler(async (req, res, next) => {
     topInvestors,
   });
 });
+
+// get all investors invested in specific company
+export const getAllInvestorsInvestedInCompany = errorHandler(
+  async (req, res, next) => {
+    const { companyId } = req.query;
+
+    if (!companyId) {
+      return res
+        .status(400)
+        .json({ status: 'fail', message: 'companyId is required' });
+    }
+
+    const deals = await Deal.find({ companyId, status: 'Approved' }).populate(
+      'investorId'
+    );
+    console.log(deals);
+
+    const investors = deals.map((deal) => deal.investorId);
+
+    res.status(200).json({
+      status: 'success',
+      investors,
+    });
+  }
+);
