@@ -14,6 +14,7 @@ import {
   updateInvestor,
   deleteInvestor,
   getTopInvestors,
+  getAllInvestorsInvestedInCompany,
 } from './investorController.js';
 import { uploadInvestorPhoto, imageProcessing } from '../upload.js';
 export const investorRouter = Router();
@@ -36,6 +37,8 @@ investorRouter.post(
   register
 );
 investorRouter.route('/').get(getAllInvestors);
+investorRouter.get('/invested', getAllInvestorsInvestedInCompany);
+
 investorRouter
   .route('/:id')
   .get(getInvestor)

@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 const dealSchema = new mongoose.Schema({
   investorId: {
     type: mongoose.Schema.ObjectId,
+    ref:"Investor",
     required: [true, 'Deal must belong to an investor'],
   },
   companyId: {
@@ -22,7 +23,7 @@ const dealSchema = new mongoose.Schema({
         'Failed',
         'In Progress',
       ],
-      message: `a {VALUE} is not defined please chose from these values ('Pending',
+      message: `a {VALUE} is not defined please choose from these values ('Pending',
         'Negotiating',
         'Approved',
         'Completed',

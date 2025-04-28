@@ -47,6 +47,7 @@ app.use('/api/v1/charityOrganizations', router.charityOrganizationRouter);
 app.use('/api/v1/posts', router.postRouter);
 app.use('/api/v1/reviews', router.reviewRouter);
 app.use('/api/v1/donations', router.donationRouter);
+app.use('/api/v1/deal', router.dealRouter);
 
 app.use('/api/v1/consultations', router.consultationRouter);
 app.use('/api/v1/questions', router.questionRouter);
