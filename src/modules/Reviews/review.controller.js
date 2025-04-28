@@ -28,7 +28,10 @@ export const addReview = async (req, res, next) => {
 };
 
 export const getAllReviews = async (req, res, next) => {
-  const reviews = await Review.find();
+  const { companyId } = req.query;
+  const reviews = await Review.find({ companyId: companyId });
+
+  // console.log(companyId);
 
   res
     .status(200)
@@ -73,4 +76,27 @@ export const deleteReviewById = async (req, res, next) => {
   await review.deleteOne();
 
   res.status(200).json({ message: 'Review deleted successfully', review });
+};
+
+export const getAvgRating = async (req, res, next) => {
+  const { companyId } = req.query;
+
+  if (!companyId) {
+    return res.status(400).json({ message: 'companyId is required' });
+  }
+  const reviews = await Review.find({ companyId });
+
+  if (reviews.length === 0) {
+    return res.status(200).json({ avgRating: 0 });
+  }
+
+  const sum = reviews.reduce((acc, curr) => {
+    return acc + curr.rating;
+  }, 0);
+
+  console.log({ sum });
+
+  const avgRating = sum / reviews.length;
+
+  res.status(200).json({ avgRating });
 };
