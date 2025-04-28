@@ -37,6 +37,9 @@ app.use(cors());
 app.use(express.json({ limit: '10kb' }));
 // parse cookie
 app.use(cookieParser());
+app.use('/api/v1/search', router.searchRouter);
+app.use('/api/v1/filter', router.searchRouter);
+
 app.use('/api/v1/auth', router.authRouter);
 app.use('/api/v1/organizations', router.organizationRouter);
 app.use('/api/v1/investors', router.investorRouter);

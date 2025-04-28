@@ -9,3 +9,4 @@ export * from './Reviews/review.routes.js';
 export * from './Donations/donation.routes.js';
 export * from './supportOrganizations/supportOrganization.routes.js';
 export * from './chairtyOrganizations/charityOrganization.routes.js';
+export * from './search.js';
