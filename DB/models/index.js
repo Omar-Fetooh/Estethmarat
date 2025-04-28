@@ -9,3 +9,4 @@ export * from './question.model.js';
 export * from './supportOrganization.model.js';
 export * from './charityOrganization.model.js';
 export * from './deal.model.js';
+export * from './comment.model.js';

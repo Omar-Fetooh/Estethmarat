@@ -10,3 +10,4 @@ export * from './Donations/donation.routes.js';
 export * from './supportOrganizations/supportOrganization.routes.js';
 export * from './chairtyOrganizations/charityOrganization.routes.js';
 export * from './deal/dealRoutes.js';
+export * from './Comment/comment.routes.js'

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { protect } from './../auth/authController.js';
+
 export const dealRouter = Router();
 import {
   getAllDeals,
