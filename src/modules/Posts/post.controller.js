@@ -1,10 +1,16 @@
-import { Organization, Post } from '../../../DB/models/index.js';
+import {
+  CharityOrganization,
+  Post,
+  supportOrganization,
+} from '../../../DB/models/index.js';
 // import { AppError, cloudinaryConfig } from '../../Utils/index.js';
 
 export const createPost = async (req, res, next) => {
-  const { title, content, organizationId } = req.body;
+  const { title, content, organizationId, organizationType } = req.body;
 
-  const organization = await Organization.findById(organizationId);
+  const organization =
+    (await CharityOrganization.findById(organizationId)) ||
+    (await supportOrganization.findById(organizationId));
 
   if (!organization) {
     return next(new AppError('organization is not found'));
@@ -14,6 +20,7 @@ export const createPost = async (req, res, next) => {
     title,
     content,
     organizationId,
+    organizationType,
   };
 
   if (req.file) {
@@ -28,6 +35,7 @@ export const createPost = async (req, res, next) => {
       content,
       organizationId,
       attachedImage: { secure_url, public_id },
+      organizationType,
     };
   }
 

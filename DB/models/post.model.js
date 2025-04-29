@@ -14,8 +14,13 @@ const postSchema = new Schema(
     },
     organizationId: {
       type: mongoose.Types.ObjectId,
-      ref: 'Organization',
       required: [true, 'OrganizationId is required'],
+      refPath: 'organizationType',
+    },
+    organizationType: {
+      type: String,
+      required: true,
+      enum: ['CharityOrganization', 'SupportOrganization'],
     },
     attachedImage: {
       secure_url: {
