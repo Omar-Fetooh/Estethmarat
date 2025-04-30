@@ -19,7 +19,7 @@ export const postRouter = Router();
 
 postRouter.post(
   '/add',
-  multerHost({ allowedExtensions: extensions.Images }).single('image'),
+  multerHost({ allowedExtensions: extensions.Images }).single('attachedImage'),
   errorHandler(createPost)
 );
 
@@ -27,7 +27,7 @@ postRouter.get('/', errorHandler(getAllPosts));
 postRouter.get('/:postId', errorHandler(getPostById));
 postRouter.put(
   '/:postId',
-  multerHost({ allowedExtensions: extensions.Images }).single('image'),
+  multerHost({ allowedExtensions: extensions.Images }).single('attachedImage'),
   errorHandler(updatePostById)
 );
 postRouter.delete('/:postId', errorHandler(deletePostById));

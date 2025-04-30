@@ -51,26 +51,28 @@ const filterBody = errorHandler(async (req, res, next) => {
   });
   if (req.body.accountType === 'منشور') {
     arrResult = [...arrOfPosts];
+  } else {
+    arrResult = arrResult.filter((obj) => {
+      if (req.body.accountType === 'مستثمر' && obj.role === 'investor') {
+        return obj;
+      } else if (req.body.accountType === 'شركة' && obj.role === 'company') {
+        return obj;
+      } else if (
+        req.body.accountType === 'منظمة خيرية' &&
+        obj.role === 'charityOrganization'
+      ) {
+        return obj;
+      } else if (
+        req.body.accountType === 'منظمة داعمة' &&
+        obj.role === 'supportOrganization'
+      ) {
+        return obj;
+      } else if (Object.keys(req.body).length === 0) {
+        return obj;
+      }
+    });
   }
-  arrResult = arrResult.filter((obj) => {
-    if (req.body.accountType === 'مستثمر' && obj.role === 'investor') {
-      return obj;
-    } else if (req.body.accountType === 'شركة' && obj.role === 'company') {
-      return obj;
-    } else if (
-      req.body.accountType === 'منظمة خيرية' &&
-      obj.role === 'charityOrganization'
-    ) {
-      return obj;
-    } else if (
-      req.body.accountType === 'منظمة داعمة' &&
-      obj.role === 'supportOrganization'
-    ) {
-      return obj;
-    } else if (Object.keys(req.body).length === 0) {
-      return obj;
-    }
-  });
+
   if (arrResult[0]?.role === 'supportOrganization') {
     arrResult = arrResult.filter((obj) => {
       if (
