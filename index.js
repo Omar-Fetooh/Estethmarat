@@ -38,7 +38,7 @@ app.use(express.json({ limit: '10kb' }));
 // parse cookie
 app.use(cookieParser());
 app.use('/api/v1/search', router.searchRouter);
-app.use('/api/v1/filter', router.searchRouter);
+// app.use('/api/v1/filter', router.searchRouter);
 
 app.use('/api/v1/auth', router.authRouter);
 app.use('/api/v1/organizations', router.organizationRouter);
@@ -51,7 +51,7 @@ app.use('/api/v1/posts', router.postRouter);
 app.use('/api/v1/reviews', router.reviewRouter);
 app.use('/api/v1/donations', router.donationRouter);
 app.use('/api/v1/deal', router.dealRouter);
-app.use('/api/v1/comments',router.commentRouter);
+app.use('/api/v1/comments', router.commentRouter);
 
 app.use('/api/v1/consultations', router.consultationRouter);
 app.use('/api/v1/questions', router.questionRouter);
