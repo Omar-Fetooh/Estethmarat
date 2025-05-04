@@ -73,8 +73,9 @@ const getSearchResult = errorHandler(async (req, res, next) => {
         (req.body.supportCountry === undefined ||
           obj.country === req.body.supportCountry) &&
         (req.body.supportedProjectFields === undefined ||
-          JSON.stringify(obj.supportedProjectFields) ===
-            JSON.stringify(req.body.supportedProjectFields))
+          req.body.supportedProjectFields.every((item) =>
+            obj.supportedProjectFields.includes(item)
+          ))
       ) {
         return obj;
       }
@@ -87,8 +88,9 @@ const getSearchResult = errorHandler(async (req, res, next) => {
         (req.body.charityOrganizationType === undefined ||
           obj.organizationType === req.body.charityOrganizationType) &&
         (req.body.charityFieldsSupported === undefined ||
-          JSON.stringify(obj.projectTypes) ===
-            JSON.stringify(req.body.charityFieldsSupported))
+          req.body.charityFieldsSupported.every((item) =>
+            obj.projectTypes.includes(item)
+          ))
       ) {
         return obj;
       }
@@ -97,13 +99,15 @@ const getSearchResult = errorHandler(async (req, res, next) => {
     userResults = userResults.filter((obj) => {
       if (
         (req.body.businessField === undefined ||
-          JSON.stringify(obj.companyField) ===
-            JSON.stringify(req.body.businessField)) &&
+          req.body.businessField.every((item) =>
+            obj.companyField.includes(item)
+          )) &&
         (req.body.country === undefined || obj.country === req.body.country) &&
         (req.body.stage === undefined || obj.state === req.body.stage) &&
         (req.body.wantedServices === undefined ||
-          JSON.stringify(Object.keys(obj.requiredServices)) ===
-            JSON.stringify(req.body.wantedServices)) &&
+          req.body.wantedServices.every((item) =>
+            Object.keys(obj.requiredServices).includes(item)
+          )) &&
         (req.body.rangeTo === undefined ||
           req.body.rangeFrom === undefined ||
           (obj.investmentAmount >= Number(req.body.rangeFrom) &&
