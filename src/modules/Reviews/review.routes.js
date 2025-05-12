@@ -9,13 +9,14 @@ import {
   getReviewById,
   updateReviewById,
 } from './review.controller.js';
+import { protect } from '../auth/authController.js';
 export const reviewRouter = Router();
 
 const { auth } = middlewares;
 
 const { errorHandler } = middlewares;
 
-reviewRouter.post('/', errorHandler(addReview));
+reviewRouter.post('/', protect, errorHandler(addReview));
 reviewRouter.get('/', errorHandler(getAllReviews));
 
 // reviewRouter.get('/:reviewId', errorHandler(getReviewById));

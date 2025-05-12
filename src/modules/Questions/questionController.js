@@ -1,10 +1,18 @@
 import { errorHandler } from '../../middlewares/error-handling.middleware.js';
 import { AppError } from '../../Utils/AppError.js';
-// import { Question } from '../../../DB/models/index';
-import { Question } from './../../../DB/models/index.js';
+import { Investor, Question } from './../../../DB/models/index.js';
 // create question
 export const createQuestion = errorHandler(async (req, res, next) => {
   // create question
+
+  const investor = req.user._id;
+  const isValidInvestor = await Investor.findById(investor);
+
+  if (!isValidInvestor) return next(new AppError('invalid investor', 404));
+
+  req.body.investor = investor;
+  // console.log(req.body);
+
   const question = await Question.create(req.body);
   // send response
   res.status(201).json({

@@ -1,11 +1,15 @@
-
-import { Comment } from '../../../DB/models/index.js';
+import { Comment, Investor } from '../../../DB/models/index.js';
 import { AppError } from '../../Utils/AppError.js';
 import { errorHandler } from '../../middlewares/error-handling.middleware.js';
 
 // Investor asks a question
 export const createComment = errorHandler(async (req, res, next) => {
-  const { companyId, investorId, questionText } = req.body;
+  const { companyId, questionText } = req.body;
+
+  const investorId = req.user._id;
+  const isValidInvestor = await Investor.findById(investorId);
+
+  if (!isValidInvestor) return next(new AppError('invalid investor', 404));
 
   if (!companyId || !questionText) {
     return res.status(400).json({
@@ -40,12 +44,14 @@ export const answerComment = errorHandler(async (req, res, next) => {
     });
   }
 
-  const comment = await Comment.findById(id);
+  const comment = await Comment.findOne({ _id: id, companyId: req.user._id });
+  // console.log(id,req.user._id);
+  // console.log(comment);
 
   if (!comment) {
     return res.status(404).json({
       status: 'fail',
-      message: 'Comment not found',
+      message: 'Comment not found or you are not authenicated',
     });
   }
 
@@ -73,7 +79,7 @@ export const getCommentsForCompany = errorHandler(async (req, res, next) => {
   }
 
   const comments = await Comment.find({ companyId: companyId })
-    .populate('investorId') 
+    .populate('investorId')
     .sort({ createdAt: -1 }); // newest first
 
   res.status(200).json({

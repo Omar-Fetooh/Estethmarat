@@ -6,10 +6,11 @@ import {
   getQuestion,
   updateQuestion,
 } from './questionController.js';
+import { protect } from '../auth/authController.js';
 
 export const questionRouter = express.Router();
 
-questionRouter.route('/').post(createQuestion).get(getAllQuestions);
+questionRouter.route('/').post(protect, createQuestion).get(getAllQuestions);
 
 questionRouter
   .route('/:questionId')

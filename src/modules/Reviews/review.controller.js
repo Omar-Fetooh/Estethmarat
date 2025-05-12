@@ -1,20 +1,38 @@
-import { Review } from '../../../DB/models/index.js';
+import {
+  Review,
+  Investor,
+  supportOrganization,
+} from '../../../DB/models/index.js';
 import { AppError } from '../../Utils/index.js';
 
 export const addReview = async (req, res, next) => {
-  const { reviewerId, reviewerType, companyId, rating, feedback } = req.body;
+  const { reviewerType, companyId, rating, feedback } = req.body;
+  const reviewerId = req.user._id;
 
-  if (reviewerType != 'Investor' && reviewerType != 'Organization') {
-    return next(new AppError('invalid reviewer Type', 400));
+  console.log(supportOrganization);
+
+  const investor = await Investor.findById(reviewerId);
+  const supportOrg = await supportOrganization.findById(reviewerId);
+
+  if (!investor && !supportOrg) {
+    return next(new AppError('Invalid reviewerId', 404));
   }
 
-  const reviewedBefore = await Review.findOne({
-    reviewerId,
-    companyId,
-  });
+  if (reviewerType !== 'Investor' && reviewerType !== 'Support Organization') {
+    return next(new AppError('Invalid reviewer type', 400));
+  }
 
-  if (reviewedBefore)
-    return next(new AppError('you can only review one time', 400));
+  if (reviewerType === 'Investor' && !investor) {
+    return next(new AppError('You are not an Investor', 403));
+  }
+  if (reviewerType === 'Support Organization' && !supportOrg) {
+    return next(new AppError('You are not a Support Organization', 403));
+  }
+
+  const reviewedBefore = await Review.findOne({ reviewerId, companyId });
+  if (reviewedBefore) {
+    return next(new AppError('You can only review one time', 400));
+  }
 
   const review = await Review.create({
     reviewerId,
