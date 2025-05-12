@@ -7,6 +7,7 @@ import {
   getAllReviews,
   getAvgRating,
   getReviewById,
+  getReviewStatusOfReviewer,
   updateReviewById,
 } from './review.controller.js';
 import { protect } from '../auth/authController.js';
@@ -18,6 +19,9 @@ const { errorHandler } = middlewares;
 
 reviewRouter.post('/', protect, errorHandler(addReview));
 reviewRouter.get('/', errorHandler(getAllReviews));
+
+// this endpoint check if this reviewer reviewed the same company or not and if it is it returns the review
+reviewRouter.get('/:reviewerId', errorHandler(getReviewStatusOfReviewer));
 
 // reviewRouter.get('/:reviewId', errorHandler(getReviewById));
 // reviewRouter.patch('/:reviewId', errorHandler(updateReviewById));

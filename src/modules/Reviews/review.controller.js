@@ -118,3 +118,18 @@ export const getAvgRating = async (req, res, next) => {
 
   res.status(200).json({ avgRating });
 };
+
+export const getReviewStatusOfReviewer = async (req, res, next) => {
+  const { reviewerId } = req.params;
+  const { companyId } = req.body;
+
+  const review = await Review.findOne({ reviewerId, companyId });
+
+  if (!review) {
+    return next(new AppError("You didn't review before ", 404));
+  }
+
+  return res
+    .status(200)
+    .json({ review, message: 'review returned successfully' });
+};
