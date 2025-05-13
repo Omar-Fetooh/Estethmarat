@@ -112,7 +112,7 @@ export const getAvgRating = async (req, res, next) => {
     return acc + curr.rating;
   }, 0);
 
-  console.log({ sum });
+  // console.log({ sum });
 
   const avgRating = sum / reviews.length;
 
