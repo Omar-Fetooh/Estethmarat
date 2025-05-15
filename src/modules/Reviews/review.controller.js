@@ -18,11 +18,11 @@ export const addReview = async (req, res, next) => {
     return next(new AppError('Invalid reviewerId', 404));
   }
 
-  if (reviewerType !== 'Investor' && reviewerType !== 'Support Organization') {
+  if (reviewerType !== 'investor' && reviewerType !== 'supportOrganization') {
     return next(new AppError('Invalid reviewer type', 400));
   }
 
-  if (reviewerType === 'Investor' && !investor) {
+  if (reviewerType === 'investor' && !investor) {
     return next(new AppError('You are not an Investor', 403));
   }
   if (reviewerType === 'Support Organization' && !supportOrg) {

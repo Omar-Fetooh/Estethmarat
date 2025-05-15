@@ -17,7 +17,7 @@ const reviewSchema = new Schema(
     reviewerType: {
       type: String,
       required: true,
-      enum: ['Investor', 'Support Organization'], // Ensures only valid values
+      enum: ['investor', 'supportOrganization'], // Ensures only valid values
     },
     rating: {
       type: Number,
