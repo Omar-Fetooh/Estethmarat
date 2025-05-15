@@ -23,7 +23,7 @@ reviewRouter.get('/', errorHandler(getAllReviews));
 reviewRouter.get('/avg-rating', errorHandler(getAvgRating));
 
 // this endpoint check if this reviewer reviewed the same company or not and if it is it returns the review
-reviewRouter.get('/:reviewerId', errorHandler(getReviewStatusOfReviewer));
+reviewRouter.post('/:reviewerId', errorHandler(getReviewStatusOfReviewer));
 
 // reviewRouter.get('/:reviewId', errorHandler(getReviewById));
 // reviewRouter.patch('/:reviewId', errorHandler(updateReviewById));
