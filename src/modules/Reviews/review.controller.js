@@ -126,7 +126,9 @@ export const getReviewStatusOfReviewer = async (req, res, next) => {
   const review = await Review.findOne({ reviewerId, companyId });
 
   if (!review) {
-    return next(new AppError("You didn't review before ", 404));
+    return res
+      .status(200)
+      .json({ message: "the reviewer didn't review before " });
   }
 
   return res
