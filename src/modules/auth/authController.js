@@ -314,6 +314,9 @@ export const protect = errorHandler(async (req, res, next) => {
     req.headers.authorization.startsWith('Bearer')
   )
     token = req.headers.authorization.split(' ')[1];
+  if (req.cookies.jwt) {
+    token = req.cookies.jwt;
+  }
   // check if there is token
   if (!token)
     return next(new AppError('you are not logged in, please login again', 401));

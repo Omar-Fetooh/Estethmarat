@@ -394,10 +394,12 @@ const charityOrganizationSchema = new Schema(
   }
 );
 charityOrganizationSchema.pre('validate', function (next) {
-  this.projectTypes = [...JSON.parse(this.projectTypes)];
-  this.targetedGroups = [...JSON.parse(this.targetedGroups)];
-  this.targetedRegions = [...JSON.parse(this.targetedRegions)];
-  this.supportTypes = [...JSON.parse(this.supportTypes)];
+  if (this.isNew) {
+    this.projectTypes = [...JSON.parse(this.projectTypes)];
+    this.targetedGroups = [...JSON.parse(this.targetedGroups)];
+    this.targetedRegions = [...JSON.parse(this.targetedRegions)];
+    this.supportTypes = [...JSON.parse(this.supportTypes)];
+  }
   next();
 });
 

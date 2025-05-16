@@ -242,7 +242,8 @@ const investorSchema = new mongoose.Schema(
   }
 );
 investorSchema.pre('validate', function (next) {
-  this.investmentfields = [...JSON.parse(this.investmentfields)];
+  if (this.isNew)
+    this.investmentfields = [...JSON.parse(this.investmentfields)];
   next();
 });
 // encrypt password

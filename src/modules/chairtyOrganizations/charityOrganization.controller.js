@@ -6,6 +6,36 @@ import { CharityOrganization } from '../../../DB/models/index.js';
 import { AppError } from '../../Utils/AppError.js';
 import { APIFEATURES } from '../../Utils/index.js';
 import { createTokenAndSendCookie } from '../../modules/auth/authController.js';
+import { errorHandler } from '../../middlewares/error-handling.middleware.js';
+
+export const uploadingCharityOrganizationFiles = errorHandler(
+  async (req, res, next) => {
+    const customId = nanoid(4);
+    if (req.files.image !== undefined) {
+      const { secure_url, public_id } =
+        await cloudinaryConfig().uploader.upload(req.files.image[0].path, {
+          folder: `${process.env.UPLOADS_FOLDER}/CharityOrganization/${customId}`,
+        });
+      req.body.image = { secure_url, public_id };
+    }
+    if (req.files.registrationProof !== undefined) {
+      const { secure_url: file_secure_url, public_id: file_public_id } =
+        await cloudinaryConfig().uploader.upload(
+          req.files.registrationProof[0].path,
+          {
+            folder: `${process.env.UPLOADS_FOLDER}/CharityOrganization/${customId}`,
+            resource_type: 'raw',
+            public_id: `${req.files.registrationProof[0].fieldname}.pdf`,
+          }
+        );
+      req.body.registrationProof = {
+        secure_url: file_secure_url,
+        public_id: file_public_id,
+      };
+    }
+    next();
+  }
+);
 
 export const addCharityOrganization = async (req, res, next) => {
   const {

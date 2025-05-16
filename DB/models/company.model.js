@@ -558,8 +558,10 @@ const companySchema = new mongoose.Schema({
   passwordChangedAt: Date,
 });
 companySchema.pre('validate', function (next) {
-  this.companyField = [...JSON.parse(this.companyField)];
-  this.requiredServices = { ...JSON.parse(this.requiredServices) };
+  if (this.isNew) {
+    this.companyField = [...JSON.parse(this.companyField)];
+    this.requiredServices = { ...JSON.parse(this.requiredServices) };
+  }
   next();
 });
 companySchema.pre('save', async function (next) {

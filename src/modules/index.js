@@ -10,5 +10,8 @@ export * from './Donations/donation.routes.js';
 export * from './supportOrganizations/supportOrganization.routes.js';
 export * from './chairtyOrganizations/charityOrganization.routes.js';
 export * from './search.js';
+export * from './data.js';
 export * from './deal/dealRoutes.js';
 export * from './Comment/comment.routes.js';
+export * from './updateMe.js';
+export * from './updateMyPassword.js';

@@ -30,7 +30,7 @@ export const uploadCompanyPhoto = upload.fields([
 
 export const uploadInvestorPhoto = upload.single('profilePhoto');
 // image processing
-const uploadImageToCloudinary = (buffer, type = 'image', filename) => {
+export const uploadImageToCloudinary = (buffer, type = 'image', filename) => {
   return new Promise((resolve, reject) => {
     const stream = cloudinaryConfig().uploader.upload_stream(
       {

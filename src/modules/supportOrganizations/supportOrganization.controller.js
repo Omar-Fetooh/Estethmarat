@@ -5,7 +5,23 @@ import { supportOrganization } from '../../../DB/models/supportOrganization.mode
 import { createTokenAndSendCookie } from '../../modules/auth/authController.js';
 import { AppError } from '../../Utils/AppError.js';
 import { APIFEATURES } from '../../Utils/index.js';
-
+import { errorHandler } from '../../middlewares/error-handling.middleware.js';
+export const uploadingSupportOrganization = errorHandler(
+  async (req, res, next) => {
+    if (req.file != undefined) {
+      const customId = nanoid(4);
+      const { secure_url, public_id } =
+        await cloudinaryConfig().uploader.upload(req.file.path, {
+          folder: `${process.env.UPLOADS_FOLDER}/SupportOrganization/${customId}`,
+        });
+      req.body.image = {
+        secure_url,
+        public_id,
+      };
+    }
+    next();
+  }
+);
 export const addSupportOrganization = async (req, res, next) => {
   const {
     name,
