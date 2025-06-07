@@ -3,13 +3,15 @@ import { protect } from './../auth/authController.js';
 
 export const dealRouter = Router();
 import {
-  getAllDeals,
+  getAllDealsOfInvestor,
   createDeal,
   getDeal,
   updateDeal,
   deleteDeal,
 } from './dealController.js';
-dealRouter.route('/').get(getAllDeals).post(createDeal);
+
+dealRouter.route('/').get(getAllDealsOfInvestor).post(createDeal);
+
 dealRouter
   .route('/:id')
   .get(protect, getDeal)

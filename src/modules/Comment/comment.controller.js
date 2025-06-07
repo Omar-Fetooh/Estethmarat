@@ -90,3 +90,27 @@ export const getCommentsForCompany = errorHandler(async (req, res, next) => {
     },
   });
 });
+
+// Get all comments/questions for a specific company
+export const getCommentsOfInvestor = errorHandler(async (req, res, next) => {
+  const { investorId } = req.query;
+
+  if (!investorId) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'investorId is required in query params',
+    });
+  }
+
+  const comments = await Comment.find({ investorId: investorId })
+    .populate('companyId')
+    .sort({ createdAt: -1 }); // newest first
+
+  res.status(200).json({
+    status: 'success',
+    results: comments.length,
+    data: {
+      comments,
+    },
+  });
+});

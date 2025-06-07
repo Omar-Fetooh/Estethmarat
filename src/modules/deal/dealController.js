@@ -59,3 +59,18 @@ export const deleteDeal = errorHandler(async (req, res, next) => {
   });
 });
 
+// get all deals of an investor
+export const getAllDealsOfInvestor = errorHandler(async (req, res, next) => {
+  const { investorId } = req.query;
+  const allDeals = await Deal.find({ investorId }).populate('companyId');
+
+  if (!allDeals)
+    return next(new AppError('There is no deal for this investor yet', 404));
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      allDeals,
+    },
+  });
+});

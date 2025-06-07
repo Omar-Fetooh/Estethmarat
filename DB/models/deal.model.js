@@ -7,6 +7,7 @@ const dealSchema = new mongoose.Schema({
   },
   companyId: {
     type: mongoose.Schema.ObjectId,
+    ref:"Company",
     required: [true, 'Deal must belong to a company'],
   },
   offerDetails: String,
