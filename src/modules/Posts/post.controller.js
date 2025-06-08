@@ -6,7 +6,10 @@ import {
 import { cloudinaryConfig } from '../../Utils/cloudinary.js';
 import { AppError } from '../../Utils/AppError.js';
 export const createPost = async (req, res, next) => {
-  const { title, content, organizationId, organizationType } = req.body;
+  const { title, content, organizationType } = req.body;
+
+  const organizationId = req.user;
+  console.log(organizationId);
 
   const organization =
     (await CharityOrganization.findById(organizationId)) ||
@@ -44,8 +47,10 @@ export const createPost = async (req, res, next) => {
   res.status(201).json({ message: 'post created successfully', post });
 };
 
-export const getAllPosts = async (req, res, next) => {
-  const posts = await Post.find();
+export const getAllPostsOfOrganization = async (req, res, next) => {
+  const { organizationId } = req.query;
+  const posts = await Post.find({ organizationId }).populate('organizationId');
+
   res.status(200).json({ message: 'All posts fetched successfully', posts });
 };
 

@@ -6,11 +6,11 @@ const postSchema = new Schema(
     title: {
       type: String,
       maxLength: 100,
-      required: [true, 'title is required'],
+      // required: [true, 'title is required'],
     },
     content: {
       type: String,
-      required: [true, 'content is required'],
+      // required: [true, 'content is required'],
     },
     organizationId: {
       type: mongoose.Types.ObjectId,
