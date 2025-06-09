@@ -3,12 +3,15 @@ import * as middlewares from '../../middlewares/index.js';
 import {
   addSupportOrganization,
   deleteSupportOrganization,
+  getAllSavedProfiles,
   getAllSupportOrganizations,
   getSupportOrganizationById,
+  saveProfile,
   updateSupportOrganization,
 } from './supportOrganization.controller.js';
 import { multerHost } from '../../middlewares/multer.middleware.js';
 import { extensions } from '../../Utils/index.js';
+import { protect } from '../auth/authController.js';
 
 const { errorHandler } = middlewares;
 
@@ -21,6 +24,12 @@ supportOrganizationRouter.post(
 );
 
 supportOrganizationRouter.get('/', errorHandler(getAllSupportOrganizations));
+supportOrganizationRouter.get(
+  '/save-profile',
+  protect,
+  errorHandler(getAllSavedProfiles)
+);
+
 supportOrganizationRouter.get(
   '/:organizationId',
   errorHandler(getSupportOrganizationById)
@@ -35,4 +44,10 @@ supportOrganizationRouter.put(
   '/:organizationId',
   multerHost({ allowedExtensions: extensions.Images }).single('logoImage'),
   errorHandler(updateSupportOrganization)
+);
+
+supportOrganizationRouter.post(
+  '/save-profile',
+  protect,
+  errorHandler(saveProfile)
 );

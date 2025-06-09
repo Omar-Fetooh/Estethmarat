@@ -388,6 +388,25 @@ const charityOrganizationSchema = new Schema(
     passwordResetToken: String,
     passwordResetTokenExpires: Date,
     passwordChangedAt: Date,
+    savedProfiles: [
+      {
+        profileId: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          refPath: 'savedProfiles.profileType',
+        },
+        profileType: {
+          type: String,
+          required: true,
+          enum: [
+            'Investor',
+            'CharityOrganization',
+            'SupportOrganization',
+            'Company',
+          ],
+        },
+      },
+    ],
   },
   {
     timestamps: true,

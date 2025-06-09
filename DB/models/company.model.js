@@ -536,7 +536,7 @@ const companySchema = new mongoose.Schema({
   },
   passwordConfirm: {
     type: String,
-    required: [true, 'please enter your password again here!'],
+    // required: [true, 'please enter your password again here!'],
     validate: {
       validator: function (val) {
         return val === this.password;
@@ -556,6 +556,25 @@ const companySchema = new mongoose.Schema({
   passwordResetToken: String,
   passwordResetTokenExpires: Date,
   passwordChangedAt: Date,
+  savedProfiles: [
+    {
+      profileId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        refPath: 'savedProfiles.profileType',
+      },
+      profileType: {
+        type: String,
+        required: true,
+        enum: [
+          'Investor',
+          'CharityOrganization',
+          'SupportOrganization',
+          'Company',
+        ],
+      },
+    },
+  ],
 });
 companySchema.pre('validate', function (next) {
   if (this.isNew) {

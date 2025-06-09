@@ -93,3 +93,73 @@ export const getTopCompanies = errorHandler(async (req, res, next) => {
     topCompanies,
   });
 });
+
+export const saveProfile = async (req, res, next) => {
+  const { profileId, profileType } = req.body;
+
+  console.log(profileId, profileType);
+
+  if (!profileId || !profileType) {
+    return next(new AppError('profileId and profileType are required', 400));
+  }
+
+  const allowedTypes = [
+    'Investor',
+    'CharityOrganization',
+    'SupportOrganization',
+    'Company',
+  ];
+  if (!allowedTypes.includes(profileType)) {
+    return next(new AppError('Invalid profile type', 400));
+  }
+
+  const companyId = req.user._id;
+
+  const company = await Company.findById(companyId);
+
+  if (!company) {
+    return next(new AppError('company is not found', 404));
+  }
+
+  // Check if already saved
+  const alreadySaved = company.savedProfiles.some(
+    (profile) =>
+      profile.profileId.toString() === profileId &&
+      profile.profileType === profileType
+  );
+
+  if (alreadySaved) {
+    return next(new AppError('Profile already saved', 400));
+  }
+
+  // Save the profile
+  company.savedProfiles.push({
+    profileId,
+    profileType,
+  });
+
+  await company.save();
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Profile saved successfully',
+    savedProfiles: company.savedProfiles,
+  });
+};
+export const getAllSavedProfiles = async (req, res, next) => {
+  console.log(req.user._id);
+
+  const company = await Company.findById(req.user._id).populate({
+    path: 'savedProfiles.profileId',
+  });
+
+  if (!company) {
+    return next(new AppError('company is not found', 404));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    count: company.savedProfiles.length,
+    data: { savedProfiles: company.savedProfiles },
+  });
+};

@@ -15,8 +15,12 @@ import {
   deleteInvestor,
   getTopInvestors,
   getAllInvestorsInvestedInCompany,
+  saveProfile,
+  getAllSavedProfiles,
 } from './investorController.js';
 import { uploadInvestorPhoto, imageProcessing } from '../upload.js';
+import { protect } from '../auth/authController.js';
+import { errorHandler } from '../../middlewares/error-handling.middleware.js';
 export const investorRouter = Router();
 
 // investorRouter.post('/login', login);
@@ -30,6 +34,9 @@ export const investorRouter = Router();
 // investorRouter.patch('/resetPassword/:token', resetPassword);
 // get the three top investors with maximum points
 investorRouter.get('/top-investors', getTopInvestors);
+investorRouter.get('/save-profile', protect, errorHandler(getAllSavedProfiles));
+investorRouter.post('/save-profile', protect, errorHandler(saveProfile));
+
 investorRouter.post(
   '/register',
   uploadInvestorPhoto,

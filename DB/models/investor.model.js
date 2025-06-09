@@ -58,7 +58,7 @@ const investorSchema = new mongoose.Schema(
     },
     passwordConfirm: {
       type: String,
-      required: [true, 'please confirm your password'],
+      // required: [true, 'please confirm your password'],
       validate: {
         validator: function (val) {
           return val === this.password;
@@ -236,6 +236,25 @@ const investorSchema = new mongoose.Schema(
     passwordResetToken: String,
     passwordResetTokenExpires: Date,
     passwordChangedAt: Date,
+    savedProfiles: [
+      {
+        profileId: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          refPath: 'savedProfiles.profileType',
+        },
+        profileType: {
+          type: String,
+          required: true,
+          enum: [
+            'Investor',
+            'CharityOrganization',
+            'SupportOrganization',
+            'Company',
+          ],
+        },
+      },
+    ],
   },
   {
     timestamps: true,

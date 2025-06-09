@@ -4,11 +4,14 @@ import {
   addCharityOrganization,
   deleteCharityOrganization,
   getAllCharityOrganizations,
+  getAllSavedProfiles,
   getCharityOrganizationById,
+  saveProfile,
   updateCharityOrganization,
 } from './charityOrganization.controller.js';
 import { multerHost } from '../../middlewares/multer.middleware.js';
 import { extensions } from '../../Utils/index.js';
+import { protect } from '../auth/authController.js';
 
 const { errorHandler } = middlewares;
 
@@ -23,6 +26,11 @@ charityOrganizationRouter.post(
     { name: 'doc', maxCount: 1 },
   ]),
   errorHandler(addCharityOrganization)
+);
+charityOrganizationRouter.get(
+  '/save-profile',
+  protect,
+  errorHandler(getAllSavedProfiles)
 );
 
 charityOrganizationRouter.get('/', errorHandler(getAllCharityOrganizations));
@@ -45,4 +53,10 @@ charityOrganizationRouter.put(
     { name: 'doc', maxCount: 1 },
   ]),
   errorHandler(updateCharityOrganization)
+);
+
+charityOrganizationRouter.post(
+  '/save-profile',
+  protect,
+  errorHandler(saveProfile)
 );
