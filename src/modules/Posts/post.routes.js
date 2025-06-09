@@ -7,11 +7,12 @@ import { extensions } from '../../Utils/index.js';
 import {
   createPost,
   deletePostById,
+  editPostById,
   getAllPostsOfOrganization,
   getPostById,
-  updatePostById,
+  // updatePostById,
 } from './post.controller.js';
-// import { protect } from '../auth/authController.js';
+import { protect } from '../auth/authController.js';
 const { auth } = middlewares;
 
 const { errorHandler } = middlewares;
@@ -21,7 +22,7 @@ export const postRouter = Router();
 postRouter.post(
   '/add',
   multerHost({ allowedExtensions: extensions.Images }).single('attachedImage'),
-  // protect,
+  protect,
   errorHandler(createPost)
 );
 
@@ -30,6 +31,7 @@ postRouter.get('/:postId', errorHandler(getPostById));
 postRouter.put(
   '/:postId',
   multerHost({ allowedExtensions: extensions.Images }).single('attachedImage'),
-  errorHandler(updatePostById)
+  protect,
+  errorHandler(editPostById)
 );
 postRouter.delete('/:postId', errorHandler(deletePostById));
