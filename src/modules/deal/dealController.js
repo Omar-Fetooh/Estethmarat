@@ -1,4 +1,4 @@
-import { Deal } from '../../../DB/models/index.js';
+import { Deal, Review } from '../../../DB/models/index.js';
 import { AppError } from '../../Utils/AppError.js';
 import { errorHandler } from '../../middlewares/error-handling.middleware.js';
 // create deal
@@ -64,13 +64,35 @@ export const getAllDealsOfInvestor = errorHandler(async (req, res, next) => {
   const { investorId } = req.query;
   const allDeals = await Deal.find({ investorId }).populate('companyId');
 
-  if (!allDeals)
+  if (!allDeals || allDeals.length === 0) {
     return next(new AppError('There is no deal for this investor yet', 404));
+  }
+
+  const finalAllDeals = await Promise.all(
+    allDeals.map(async (deal) => {
+      const companyId = deal.companyId?._id;
+      let avgRating = 0;
+
+      if (companyId) {
+        const reviews = await Review.find({ companyId });
+
+        if (reviews.length > 0) {
+          const sum = reviews.reduce((acc, curr) => acc + curr.rating, 0);
+          avgRating = sum / reviews.length;
+        }
+      }
+
+      return {
+        ...deal.toObject(),
+        avgRating,
+      };
+    })
+  );
 
   res.status(200).json({
     status: 'success',
     data: {
-      allDeals,
+      allDeals: finalAllDeals,
     },
   });
 });
