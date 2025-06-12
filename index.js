@@ -58,7 +58,9 @@ app.use('/api/v1/comments', router.commentRouter);
 
 app.use('/api/v1/consultations', router.consultationRouter);
 app.use('/api/v1/questions', router.questionRouter);
-
+app.use('/api/v1/recommendations', router.suggestCompanyRouter);
+app.use('/api/v1/three-top-companies', router.TopThreeCompanyRouter);
+app.use('/api/v1/three-top-investors', router.TopThreeInvestorRouter);
 app.get('/', (req, res) => res.send('Welcome in Estethmarat!'));
 const server = app.listen(port, () =>
   console.log(`Example app listening on port ${port}!`)

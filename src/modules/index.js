@@ -15,3 +15,6 @@ export * from './deal/dealRoutes.js';
 export * from './Comment/comment.routes.js';
 export * from './updateMe.js';
 export * from './updateMyPassword.js';
+export * from './suggestionCompanies/suggestedCompany.Routes.js';
+export * from './statisticsInvestors/statisticsInvestors.routes.js';
+export * from './statisticsCompanies/statisticsCompany.routes.js';

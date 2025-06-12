@@ -10,3 +10,6 @@ export * from './supportOrganization.model.js';
 export * from './charityOrganization.model.js';
 export * from './deal.model.js';
 export * from './comment.model.js';
+export * from './suggestedCompany.model.js';
+export * from './topThreeCompanies.model.js';
+export * from './topThreeInvestors.model.js';

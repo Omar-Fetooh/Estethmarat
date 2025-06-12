@@ -10,31 +10,49 @@ export const searchRouter = Router();
 
 const getSearchResult = errorHandler(async (req, res, next) => {
   const { name } = req.query;
-  const investors = await Investor.find({
-    fullEnglishName: { $regex: name, $options: 'i' },
-  });
-  const companies = await Company.find({
-    companyName: { $regex: name, $options: 'i' },
-  });
-  const supportOrganizations = await supportOrganization.find({
-    name: { $regex: name, $options: 'i' },
-  });
-  const charityOrganizations = await CharityOrganization.find({
-    name: { $regex: name, $options: 'i' },
-  });
-  let userResults = [
-    ...investors,
-    ...companies,
-    ...supportOrganizations,
-    ...charityOrganizations,
-  ];
+  let userResults, arrOfPosts;
+  if (name) {
+    const investors = await Investor.find({
+      fullEnglishName: { $regex: name, $options: 'i' },
+    });
+    const companies = await Company.find({
+      companyName: { $regex: name, $options: 'i' },
+    });
+    const supportOrganizations = await supportOrganization.find({
+      name: { $regex: name, $options: 'i' },
+    });
+    const charityOrganizations = await CharityOrganization.find({
+      name: { $regex: name, $options: 'i' },
+    });
 
-  const arrOfPosts = await Post.find({
-    title: {
-      $regex: name,
-      $options: 'i',
-    },
-  });
+    userResults = [
+      ...investors,
+      ...companies,
+      ...supportOrganizations,
+      ...charityOrganizations,
+    ];
+    arrOfPosts = await Post.find({
+      title: {
+        $regex: name,
+        $options: 'i',
+      },
+    });
+  }
+  if (!name) {
+    const investors = await Investor.find();
+    const companies = await Company.find();
+    const supportOrganizations = await supportOrganization.find();
+    const charityOrganizations = await CharityOrganization.find();
+    const posts = await Post.find();
+    userResults = [
+      ...investors,
+      ...companies,
+      ...supportOrganizations,
+      ...charityOrganizations,
+      ...posts,
+    ];
+    userResults.sort((a, b) => b.createdAt - a.createdAt);
+  }
 
   if (req.body.accountType === 'منشور') {
     userResults = [...arrOfPosts];
