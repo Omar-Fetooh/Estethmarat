@@ -556,6 +556,10 @@ const companySchema = new mongoose.Schema({
   passwordResetToken: String,
   passwordResetTokenExpires: Date,
   passwordChangedAt: Date,
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+  },
   savedProfiles: [
     {
       profileId: {
