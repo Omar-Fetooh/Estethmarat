@@ -18,7 +18,7 @@ export const getRecomendations = errorHandler(async (req, res, next) => {
     const suggestedCompanies = await SuggestedCom.find()
       .populate({
         path: 'company',
-        select: '-__v',
+        select: '-__v -password',
       })
       .select('-__v');
     let newSuggested = [];
