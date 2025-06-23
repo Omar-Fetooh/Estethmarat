@@ -18,7 +18,11 @@
     "cloudinary": "^2.6.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+<<<<<<< HEAD
     "csvtojson": "^2.0.10",
+=======
+    "csv-parser": "^3.2.0",
+>>>>>>> b8c12e0cb00d74ff1e2b6c90117573b6a4b11fa4
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "joi": "^17.13.3",
