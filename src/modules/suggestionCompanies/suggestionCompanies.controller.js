@@ -13,12 +13,12 @@ export const getRecomendations = errorHandler(async (req, res, next) => {
     (await Investor.findById(userId).select('role -_id')) ||
     (await Company.findById(userId).select('role -_id')) ||
     (await CharityOrganization.findById(userId).select('role -_id')) ||
-    (await CharityOrganization.findById(userId).select('role -_id'));
+    (await supportOrganization.findById(userId).select('role -_id'));
   if (role === 'investor') {
     const suggestedCompanies = await SuggestedCom.find()
       .populate({
         path: 'company',
-        select: '-__v',
+        select: '-__v -password',
       })
       .select('-__v');
     let newSuggested = [];
