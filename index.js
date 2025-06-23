@@ -4,7 +4,7 @@ import { config } from 'dotenv';
 import cors from 'cors';
 import * as router from './src/modules/index.js';
 import db_connection from './DB/connection.js';
-
+import { Investor } from './DB/models/investor.model.js';
 import { globalMiddleware } from './src/middlewares/errorController.js';
 import { AppError } from './src/Utils/AppError.js';
 import { globalResponse } from './src/middlewares/error-handling.middleware.js';
@@ -27,6 +27,8 @@ const DATABASECONNECTIONSTRING = process.env.DATABASE_STR.replace(
 db_connection(DATABASECONNECTIONSTRING);
 // db_connection('mongodb://localhost:27017/estethmarat');
 
+const investors = await Investor.find().select('+password');
+console.log(investors);
 const app = express();
 const port = process.env.PORT || 5000;
 console.log(DATABASECONNECTIONSTRING);

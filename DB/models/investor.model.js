@@ -24,7 +24,11 @@ const investorSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Company',
     },
-
+    recommendation_id: {
+      type: Number,
+      unique: true,
+      required: [true, 'please provide your recommendation_id'],
+    },
     phoneNumber: {
       type: String,
       required: [true, 'provide phone number'],
@@ -260,6 +264,14 @@ const investorSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+// set recommendation_id automatically
+investorSchema.pre('save', async function (next) {
+  const investors = await Investor.find();
+  this.recommendation_id = investors.length + 1;
+  next();
+});
+
 investorSchema.pre('validate', function (next) {
   if (this.isNew)
     this.investmentfields = [...JSON.parse(this.investmentfields)];
