@@ -4,6 +4,11 @@ import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 
 const companySchema = new mongoose.Schema({
+  recommendation_id: {
+    type: Number,
+    required: true,
+    unique: true,
+  },
   registrationNumber: {
     type: String,
     unique: true,
@@ -585,6 +590,11 @@ companySchema.pre('validate', function (next) {
     this.companyField = [...JSON.parse(this.companyField)];
     this.requiredServices = { ...JSON.parse(this.requiredServices) };
   }
+  next();
+});
+companySchema.pre('save', async function (next) {
+  const companies = await Company.find();
+  this.recommendation_id = companies.length + 1;
   next();
 });
 companySchema.pre('save', async function (next) {
