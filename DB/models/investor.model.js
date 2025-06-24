@@ -27,7 +27,6 @@ const investorSchema = new mongoose.Schema(
     recommendation_id: {
       type: Number,
       unique: true,
-      required: [true, 'please provide your recommendation_id'],
     },
     phoneNumber: {
       type: String,
