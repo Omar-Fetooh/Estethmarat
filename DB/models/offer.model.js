@@ -10,15 +10,23 @@ const offerSchema = new mongoose.Schema(
       ref: 'Company',
       required: [true, 'specify the company in your offer'],
     },
-    investor: {
-      type: mongoose.Schema.ObjectId,
-      ref: 'Investor',
-      required: [true, 'specify the investor in your offer'],
+    sender: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: [true, 'specify the sender in your offer'],
+      refPath: 'senderModel',
+    },
+    senderModel: {
+      type: String,
+      required: true,
+      enum: ['Investor', 'Company'],
     },
     content: {
       type: String,
       required: [true, 'specify the content of your offer'],
       minlength: 0,
+    },
+    serviceType: {
+      type: String,
     },
     response: {
       type: String,
@@ -32,7 +40,7 @@ const offerSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    investorSeenResponse: {
+    responseSeenBySender: {
       type: Boolean,
       default: false,
     },

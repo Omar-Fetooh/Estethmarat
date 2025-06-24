@@ -3,30 +3,30 @@ import { AppError } from '../../Utils/AppError.js';
 import { Company, Investor, Offer } from '../../../DB/models/index.js';
 
 export const createOffer = errorHandler(async (req, res, next) => {
-  // console.log(req);
-
   const { companyId } = req.query;
-  // console.log(companyId);
 
   const company = await Company.findById(companyId);
   if (!company) {
-    return next(new AppError('invalid company id ', 404));
+    return next(new AppError('Invalid company ID', 404));
   }
 
-  const investorId = req.user._id;
-  const isValidInvestor = await Investor.findById(investorId);
+  const senderId = req.user._id;
 
-  // console.log(investorId, isValidInvestor);
+  const isInvestor = await Investor.findById(senderId);
+  const isCompany = !isInvestor ? await Company.findById(senderId) : null;
 
-  if (!isValidInvestor) return next(new AppError('invalid investor', 404));
+  if (!isInvestor && !isCompany) {
+    return next(
+      new AppError('Sender must be a valid Investor or Company', 404)
+    );
+  }
 
   req.body.company = companyId;
-  req.body.investor = investorId;
-  // req.body.investor = investorId;
-  // console.log(req.body);
+  req.body.sender = senderId;
+  req.body.senderModel = isInvestor ? 'Investor' : 'Company';
 
   const offer = await Offer.create(req.body);
-  // send response
+
   res.status(201).json({
     status: 'success',
     data: {
@@ -67,18 +67,19 @@ export const getOffer = errorHandler(async (req, res, next) => {
 
 // update offer based on id
 export const updateOffer = errorHandler(async (req, res, next) => {
-  // check if ther is offer with that id
   const offer = await Offer.findById(req.params.offerId);
-  if (!offer) return next(new AppError('there is no offer with that id', 404));
-
-  const companyId = req.user._id;
-  if (companyId.toString() !== offer.company.toString()) {
-    console.log(555555555,companyId,offer.company);
-    
-    return next(new AppError("You don't have permission to do this ", 404));
+  if (!offer) {
+    return next(new AppError('There is no offer with that ID', 404));
   }
 
-  // update offer based on id
+  const userId = req.user._id;
+  const isCompany = userId.toString() === offer.company.toString();
+
+  if (!isCompany) {
+    return next(new AppError("You don't have permission to do this", 403));
+  }
+
+  // update offer content
   const updatedOffer = await Offer.findByIdAndUpdate(
     req.params.offerId,
     req.body,
@@ -91,8 +92,8 @@ export const updateOffer = errorHandler(async (req, res, next) => {
   updatedOffer.companySeen = true;
   updatedOffer.companyResponded = true;
 
-  updatedOffer.save();
-  // send response
+  await updatedOffer.save();
+
   res.status(200).json({
     status: 'success',
     data: {
