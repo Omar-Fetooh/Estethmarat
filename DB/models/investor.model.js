@@ -28,6 +28,10 @@ const investorSchema = new mongoose.Schema(
       type: Number,
       unique: true,
     },
+    description: {
+      type: String,
+      required: [true, 'investor should provide a description'],
+    },
     phoneNumber: {
       type: String,
       required: [true, 'provide phone number'],
