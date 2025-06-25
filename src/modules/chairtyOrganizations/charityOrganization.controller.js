@@ -59,6 +59,7 @@ export const addCharityOrganization = async (req, res, next) => {
     country,
     headQuarter,
     acceptNotifications,
+    description
   } = req.body;
 
   if (!req.files) {
@@ -112,6 +113,7 @@ export const addCharityOrganization = async (req, res, next) => {
     username,
     email,
     password,
+    description,
     organizationType,
     phoneNumber,
     image: {
