@@ -6,7 +6,6 @@ import crypto from 'crypto';
 const companySchema = new mongoose.Schema({
   recommendation_id: {
     type: Number,
-    required: true,
     unique: true,
   },
   registrationNumber: {
