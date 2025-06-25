@@ -19,6 +19,7 @@ const charityOrganizationSchema = new Schema(
       trim: true,
       unique: true,
     },
+    description: { type: String, required: true },
     role: {
       type: String,
       default: 'charityOrganization',
