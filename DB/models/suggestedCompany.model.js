@@ -1,15 +1,14 @@
 import mongoose, { Schema } from 'mongoose';
 
 const suggestedCompany = new mongoose.Schema({
-  company: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Company',
+  investor_id: {
+    type: Number,
+    ref: 'Investor',
     required: true,
   },
-  score: {
-    type: Number,
+  recommendations: {
+    type: [Number],
     required: true,
   },
 });
-
 export const SuggestedCom = mongoose.model('SuggestedCom', suggestedCompany);

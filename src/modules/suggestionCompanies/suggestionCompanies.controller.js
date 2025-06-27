@@ -15,12 +15,24 @@ export const getRecomendations = errorHandler(async (req, res, next) => {
     (await CharityOrganization.findById(userId).select('role -_id')) ||
     (await supportOrganization.findById(userId).select('role -_id'));
   if (role === 'investor') {
-    const suggestedCompanies = await SuggestedCom.find()
-      .populate({
-        path: 'company',
-        select: '-__v -password',
-      })
-      .select('-__v');
+    const investor = await Investor.findById(userId);
+    const recommendation_id = investor.recommendation_id;
+    const results = await fetch(
+      `https://modelapi-production-708b.up.railway.app/recommend/${recommendation_id}`
+    );
+    const data = await results.json();
+
+    if (!(await SuggestedCom.findOne({ investor_id: recommendation_id }))) {
+      await SuggestedCom.create(data);
+    }
+    const realSuggestedCompanies = await SuggestedCom.find();
+    const suggestedCompanies = await Promise.all(
+      realSuggestedCompanies
+        .find((obj) => obj.investor_id === recommendation_id)
+        .recommendations.map(
+          async (id) => await Company.findOne({ recommendation_id: id })
+        )
+    );
     let newSuggested = [];
     for (let i = 0; i < suggestedCompanies.length; i++) {
       if (i === 9) break;

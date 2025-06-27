@@ -2,8 +2,7 @@ import mongoose from 'mongoose';
 
 const threeCompainesSchema = new mongoose.Schema({
   companyid: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Company',
+    type: Number,
     required: true,
   },
   score: {
