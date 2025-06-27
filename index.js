@@ -6,8 +6,6 @@ import * as router from './src/modules/index.js';
 import db_connection from './DB/connection.js';
 import { globalMiddleware } from './src/middlewares/errorController.js';
 import { AppError } from './src/Utils/AppError.js';
-import { globalResponse } from './src/middlewares/error-handling.middleware.js';
-
 // uncaught exception
 process.on('uncaughtException', (err) => {
   console.log('something went wrong🔥', err);
@@ -57,7 +55,7 @@ app.use('/api/v1/deal', router.dealRouter);
 app.use('/api/v1/comments', router.commentRouter);
 
 app.use('/api/v1/consultations', router.consultationRouter);
-app.use('/api/v1/questions', router.questionRouter);
+app.use('/api/v1/offers', router.offerRouter);
 app.use('/api/v1/recommendations', router.suggestCompanyRouter);
 app.use('/api/v1/three-top-companies', router.TopThreeCompanyRouter);
 app.use('/api/v1/three-top-investors', router.TopThreeInvestorRouter);

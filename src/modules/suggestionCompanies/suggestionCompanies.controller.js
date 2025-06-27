@@ -8,6 +8,7 @@ import { supportOrganization } from '../../../DB/models/supportOrganization.mode
 import { AppError } from '../../Utils/AppError.js';
 export const getRecomendations = errorHandler(async (req, res, next) => {
   const { userId } = req.query;
+
   if (!userId) return next(new AppError('Please provide user id!', 400));
   const { role } =
     (await Investor.findById(userId).select('role -_id')) ||

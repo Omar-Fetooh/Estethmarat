@@ -1,9 +1,8 @@
 import mongoose from 'mongoose';
 
 const threeInvestorsSchema = new mongoose.Schema({
-  investorid: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Investor',
+  investor_id: {
+    type: Number,
     required: true,
   },
   score: {
@@ -12,7 +11,7 @@ const threeInvestorsSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now(),
+    default: Date.now,
   },
 });
 
