@@ -1,4 +1,4 @@
-import { Company } from '../../../DB/models/index.js';
+import { Company, SimilarComp } from '../../../DB/models/index.js';
 import { AppError } from '../../Utils/AppError.js';
 import { APIFEATURES } from '../../Utils/apiFeatures.js';
 import { createTokenAndSendCookie } from '../auth/authController.js';
@@ -37,10 +37,42 @@ export const getCompany = errorHandler(async (req, res, next) => {
   const company = await Company.findById(req.params.id);
   if (!company)
     return next(new AppError('There is no company with this id', 404));
+
+  const similarRelations = await SimilarComp.find({
+    company_id: company.recommendation_id,
+  });
+
+  const similarCompanyIds = similarRelations.map(
+    (relation) => relation.similar_company_id
+  );
+
+  let similarCompanies = [];
+  if (similarCompanyIds.length > 0) {
+    similarCompanies = await Company.find({
+      recommendation_id: { $in: similarCompanyIds },
+    });
+  }
+  const sortedRelations = similarRelations.sort((a, b) => b.score - a.score);
+
+  const companyMap = new Map(
+    (
+      await Company.find({
+        recommendation_id: { $in: similarCompanyIds },
+      })
+    ).map((c) => [c.recommendation_id, c])
+  );
+
+  const similarCompaniesSorted = sortedRelations
+    .map((rel) => companyMap.get(rel.similar_company_id))
+    .filter(Boolean);
+
+  // console.log(similarCompanies);
+
   res.status(200).json({
     status: 'success',
     data: {
       company,
+      similarCompaniesSorted,
     },
   });
 });
