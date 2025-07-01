@@ -54,11 +54,12 @@ app.use('/api/v1/donations', router.donationRouter);
 app.use('/api/v1/deal', router.dealRouter);
 app.use('/api/v1/comments', router.commentRouter);
 
-app.use('/api/v1/consultations', router.consultationRouter);
 app.use('/api/v1/offers', router.offerRouter);
 app.use('/api/v1/recommendations', router.suggestCompanyRouter);
 app.use('/api/v1/three-top-companies', router.TopThreeCompanyRouter);
 app.use('/api/v1/three-top-investors', router.TopThreeInvestorRouter);
+app.use('/api/v1/consultaions', router.consultationRouter);
+app.use('/api/v1/consultationReplies', router.consultationRouterReplies);
 app.get('/', (req, res) => res.send('Welcome in Estethmarat!'));
 const server = app.listen(port, () =>
   console.log(`Example app listening on port ${port}!`)
