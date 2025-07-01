@@ -17,4 +17,6 @@ export * from './updateMyPassword.js';
 export * from './suggestionCompanies/suggestedCompany.Routes.js';
 export * from './statisticsInvestors/statisticsInvestors.routes.js';
 export * from './statisticsCompanies/statisticsCompany.routes.js';
-export * from './Offers/offerRouter.js'
+export * from './Offers/offerRouter.js';
+export * from './consultation/consultation.routes.js';
+export * from './consultationReplies/consultationReplies.route.js';

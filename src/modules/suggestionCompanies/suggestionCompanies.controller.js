@@ -39,7 +39,7 @@ export const getRecomendations = errorHandler(async (req, res, next) => {
     }
     let posts = await Post.find({
       organizationType: 'CharityOrganization',
-    });
+    }).populate('organizationId');
     const charityPosts = posts.sort((a, b) => b.updatedAt - a.updatedAt);
     let newCharityPosts = [];
     for (let i = 0; i < charityPosts.length; i++) {
@@ -63,17 +63,16 @@ export const getRecomendations = errorHandler(async (req, res, next) => {
     ]);
     const supportPosts = await Post.find({
       organizationType: 'SupportOrganization',
-    });
+    }).populate('organizationId');
     const supPosts = supportPosts.sort((a, b) => b.updatedAt - a.updatedAt);
     let newSupportPosts = [];
     for (let i = 0; i < supPosts.length; i++) {
       if (i === 4) break;
       newSupportPosts.push(supPosts[i]);
     }
-
     const charityPosts = await Post.find({
       organizationType: 'CharityOrganization',
-    });
+    }).populate('organizationId');
     const chaPosts = charityPosts.sort((a, b) => b.updatedAt - a.updatedAt);
     let newCharityPosts = [];
     for (let i = 0; i < chaPosts.length; i++) {

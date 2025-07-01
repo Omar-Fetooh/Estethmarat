@@ -14,6 +14,7 @@ const postSchema = new Schema(
     },
     organizationId: {
       type: mongoose.Types.ObjectId,
+      refPath: 'organizationType',
       required: [true, 'OrganizationId is required'],
       refPath: 'organizationType',
     },

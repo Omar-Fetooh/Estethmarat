@@ -11,5 +11,5 @@ export const authRouter = Router();
 
 authRouter.post('/login', upload.none(), login);
 authRouter.post('/forgotPassword', upload.none(), forgotPassword);
-authRouter.patch('/resetPassword', resetPassword);
+authRouter.patch('/resetPassword/:token', resetPassword);
 authRouter.get('/logout', logout);
