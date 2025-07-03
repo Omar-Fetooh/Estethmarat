@@ -129,8 +129,6 @@ export const getTopCompanies = errorHandler(async (req, res, next) => {
 export const saveProfile = async (req, res, next) => {
   const { profileId, profileType } = req.body;
 
-  console.log(profileId, profileType);
-
   if (!profileId || !profileType) {
     return next(new AppError('profileId and profileType are required', 400));
   }
@@ -165,12 +163,20 @@ export const saveProfile = async (req, res, next) => {
   }
 
   // Save the profile
-  company.savedProfiles.push({
-    profileId,
-    profileType,
-  });
+  await Company.updateOne(
+    { _id: companyId },
+    {
+      $push: {
+        savedProfiles: { profileId, profileType },
+      },
+    },
+    {
+      new: true, 
+      runValidators: false, 
+    }
+  );
 
-  await company.save();
+  console.log(5555555555);
 
   res.status(200).json({
     status: 'success',
@@ -188,10 +194,12 @@ export const getAllSavedProfiles = async (req, res, next) => {
   if (!company) {
     return next(new AppError('company is not found', 404));
   }
+ const updatedCompany = await Company.findById(req.user._id).select('savedProfiles');
 
-  res.status(200).json({
-    status: 'success',
-    count: company.savedProfiles.length,
-    data: { savedProfiles: company.savedProfiles },
-  });
+    res.status(200).json({
+      status: 'success',
+      message: 'Profile saved successfully',
+      savedProfiles: updatedCompany.savedProfiles,
+    });
+  
 };

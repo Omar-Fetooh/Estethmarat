@@ -185,17 +185,26 @@ export const saveProfile = async (req, res, next) => {
   }
 
   // Save the profile
-  investor.savedProfiles.push({
-    profileId,
-    profileType,
-  });
+  await Investor.findByIdAndUpdate(
+    req.user._id,
+    {
+      $push: {
+        savedProfiles: { profileId, profileType },
+      },
+    },
+    {
+      runValidators: false,
+    }
+  );
 
-  await investor.save();
+  const updatedInvestor = await Investor.findById(req.user._id).select(
+    'savedProfiles'
+  );
 
   res.status(200).json({
     status: 'success',
     message: 'Profile saved successfully',
-    savedProfiles: investor.savedProfiles,
+    savedProfiles: updatedInvestor.savedProfiles,
   });
 };
 export const getAllSavedProfiles = async (req, res, next) => {
