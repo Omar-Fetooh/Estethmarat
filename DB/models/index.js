@@ -14,3 +14,4 @@ export * from './suggestedCompany.model.js';
 export * from './topThreeCompanies.model.js';
 export * from './topThreeInvestors.model.js';
 export * from './RequestConsultation.model.js';
+export * from './getSupport.model.js';
