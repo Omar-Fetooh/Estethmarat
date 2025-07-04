@@ -19,3 +19,4 @@ export * from './statisticsCompanies/statisticsCompany.routes.js';
 export * from './Offers/offerRouter.js';
 export * from './consultation/consultation.Routes.js';
 export * from './consultationReplies/consultationReplies.routes.js';
+export * from './getSupporting/getSupport.routes.js';
