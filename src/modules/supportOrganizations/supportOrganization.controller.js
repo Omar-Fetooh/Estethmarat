@@ -321,28 +321,37 @@ export const saveProfile = async (req, res, next) => {
     return next(new AppError('Profile already saved', 400));
   }
 
-  // Save the profile
-  organization.savedProfiles.push({
-    profileId,
-    profileType,
-  });
+  // Save the profile using $push and avoid full document validation
+  await supportOrganization.findByIdAndUpdate(
+    req.user._id,
+    {
+      $push: {
+        savedProfiles: { profileId, profileType },
+      },
+    },
+    {
+      runValidators: false,
+    }
+  );
 
-  await organization.save();
+  const updatedOrganization = await supportOrganization.findById(
+    req.user._id
+  ).select('savedProfiles');
 
   res.status(200).json({
     status: 'success',
     message: 'Profile saved successfully',
-    savedProfiles: organization.savedProfiles,
+    savedProfiles: updatedOrganization.savedProfiles,
   });
 };
 export const getAllSavedProfiles = async (req, res, next) => {
   console.log(req.user._id);
 
-  const organization = await supportOrganization.findById(
-    req.user._id
-  ).populate({
-    path: 'savedProfiles.profileId',
-  });
+  const organization = await supportOrganization
+    .findById(req.user._id)
+    .populate({
+      path: 'savedProfiles.profileId',
+    });
 
   if (!organization) {
     return next(new AppError('Organization is not found', 404));
