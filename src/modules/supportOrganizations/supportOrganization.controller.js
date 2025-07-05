@@ -156,30 +156,29 @@ export const getSupportOrganizationById = async (req, res, next) => {
 export const deleteSupportOrganization = async (req, res, next) => {
   const { organizationId } = req.params;
 
-  const supportOrganization = await supportOrganization.findById(
+  console.log(req.user._id.toString(), organizationId.toString());
+
+  if (req.user._id.toString() !== organizationId.toString()) {
+    return next(new AppError('Unauthorized', 401));
+  }
+
+  const deletedSupportOrganization = await supportOrganization.findByIdAndDelete(
     organizationId
   );
 
-  if (!supportOrganization) {
-    return next(new AppError('Sorry, support organization not found', 404));
-  }
+  // await cloudinaryConfig().api.delete_resources_by_prefix(
+  //   `${process.env.UPLOADS_FOLDER}/SupportOrganization/${supportOrganization.customId}`
+  // );
 
-  await cloudinaryConfig().api.delete_resources_by_prefix(
-    `${process.env.UPLOADS_FOLDER}/SupportOrganization/${supportOrganization.customId}`
-  );
+  // await cloudinaryConfig().api.delete_folder(
+  //   `${process.env.UPLOADS_FOLDER}/SupportOrganization/${supportOrganization.customId}`
+  // );
 
-  await cloudinaryConfig().api.delete_folder(
-    `${process.env.UPLOADS_FOLDER}/SupportOrganization/${supportOrganization.customId}`
-  );
-
-  supportOrganization.isMarkedAsDeleted = true;
-
-  await supportOrganization.save();
 
   res.status(200).json({
     status: 'Success',
     message: 'Support organization deleted successfully',
-    data: supportOrganization,
+    data: deletedSupportOrganization,
   });
 };
 
@@ -334,9 +333,9 @@ export const saveProfile = async (req, res, next) => {
     }
   );
 
-  const updatedOrganization = await supportOrganization.findById(
-    req.user._id
-  ).select('savedProfiles');
+  const updatedOrganization = await supportOrganization
+    .findById(req.user._id)
+    .select('savedProfiles');
 
   res.status(200).json({
     status: 'success',

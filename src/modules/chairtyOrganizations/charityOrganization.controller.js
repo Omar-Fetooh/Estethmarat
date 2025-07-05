@@ -59,7 +59,7 @@ export const addCharityOrganization = async (req, res, next) => {
     country,
     headQuarter,
     acceptNotifications,
-    description
+    description,
   } = req.body;
 
   if (!req.files) {
@@ -191,7 +191,13 @@ export const getCharityOrganizationById = async (req, res, next) => {
 export const deleteCharityOrganization = async (req, res, next) => {
   const { organizationId } = req.params;
 
-  const charityOrganization = await CharityOrganization.findById(
+  console.log(req.user._id.toString(), organizationId.toString());
+
+  if (req.user._id.toString() !== organizationId.toString()) {
+    return next(new AppError('Unauthorized', 401));
+  }
+
+  const charityOrganization = await CharityOrganization.findByIdAndDelete(
     organizationId
   );
 
@@ -199,17 +205,13 @@ export const deleteCharityOrganization = async (req, res, next) => {
     return next(new AppError('Sorry, charity organization not found', 404));
   }
 
-  await cloudinaryConfig().api.delete_resources_by_prefix(
-    `${process.env.UPLOADS_FOLDER}/CharityOrganization/${charityOrganization.customId}`
-  );
+  // await cloudinaryConfig().api.delete_resources_by_prefix(
+  //   `${process.env.UPLOADS_FOLDER}/CharityOrganization/${charityOrganization.customId}`
+  // );
 
-  await cloudinaryConfig().api.delete_folder(
-    `${process.env.UPLOADS_FOLDER}/CharityOrganization/${charityOrganization.customId}`
-  );
-
-  charityOrganization.isMarkedAsDeleted = true;
-
-  await charityOrganization.save();
+  // await cloudinaryConfig().api.delete_folder(
+  //   `${process.env.UPLOADS_FOLDER}/CharityOrganization/${charityOrganization.customId}`
+  // );
 
   res.status(200).json({
     status: 'Success',
