@@ -132,9 +132,7 @@ export const getAllInvestorsInvestedInCompany = errorHandler(
         .json({ status: 'fail', message: 'companyId is required' });
     }
 
-    const deals = await Deal.find({ companyId, status: 'Approved' }).populate(
-      'investorId'
-    );
+    const deals = await Deal.find({ companyId, status: 'Approved' }).populate('investorId');
     console.log(deals);
 
     const investors = deals.map((deal) => deal.investorId);

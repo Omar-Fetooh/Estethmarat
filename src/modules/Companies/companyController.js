@@ -1,4 +1,9 @@
-import { Company, SimilarComp } from '../../../DB/models/index.js';
+import {
+  Company,
+  Offer,
+  requestConsultation,
+  SimilarComp,
+} from '../../../DB/models/index.js';
 import { AppError } from '../../Utils/AppError.js';
 import { APIFEATURES } from '../../Utils/apiFeatures.js';
 import { createTokenAndSendCookie } from '../auth/authController.js';
@@ -165,12 +170,20 @@ export const saveProfile = async (req, res, next) => {
   }
 
   // Save the profile
-  company.savedProfiles.push({
-    profileId,
-    profileType,
-  });
+  await Company.updateOne(
+    { _id: companyId },
+    {
+      $push: {
+        savedProfiles: { profileId, profileType },
+      },
+    },
+    {
+      new: true,
+      runValidators: false,
+    }
+  );
 
-  await company.save();
+  console.log(5555555555);
 
   res.status(200).json({
     status: 'success',
@@ -188,10 +201,51 @@ export const getAllSavedProfiles = async (req, res, next) => {
   if (!company) {
     return next(new AppError('company is not found', 404));
   }
+  const updatedCompany = await Company.findById(req.user._id).select(
+    'savedProfiles'
+  );
 
   res.status(200).json({
     status: 'success',
-    count: company.savedProfiles.length,
-    data: { savedProfiles: company.savedProfiles },
+    message: 'Profile saved successfully',
+    savedProfiles: updatedCompany.savedProfiles,
   });
 };
+export const getAllNotifications = errorHandler(async (req, res, next) => {
+  const companyId = req.user.id;
+
+  const [incomingOffers, respondedOutgoingOffers, consultations] =
+    await Promise.all([
+      Offer.find({ company: companyId }),  // بجيب الي مبعوت للشركه
+      Offer.find({ sender: companyId, companyResponded: true }),  // بجيب عروض الخدمة الي الشركة باعتاها
+      requestConsultation.find({
+        company: companyId,
+        investorReply: { $ne: '' },
+      }),
+    ]);
+
+  const hasUnseenIncoming = incomingOffers.some(
+    (offer) => offer.companySeen === false
+  );
+  const hasUnseenOutgoing = respondedOutgoingOffers.some(
+    (offer) => offer.companyResponded === true && offer.senderSeen === false
+  );
+  const hasUnseenConsultations = consultations.some(
+    (cons) => cons.isRepliesSeenByCompany === false
+  );
+
+  const allSeen =
+    !hasUnseenIncoming && !hasUnseenOutgoing && !hasUnseenConsultations;
+
+  const allNotifications = [
+    ...incomingOffers,
+    ...respondedOutgoingOffers,
+    ...consultations,
+  ];
+
+  return res.status(200).json({
+    status: 'success',
+    allSeen,
+    allData: allNotifications,
+  });
+});

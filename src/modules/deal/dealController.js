@@ -1,9 +1,29 @@
-import { Deal, Review } from '../../../DB/models/index.js';
+import { Deal, Investor, Review } from '../../../DB/models/index.js';
 import { AppError } from '../../Utils/AppError.js';
 import { errorHandler } from '../../middlewares/error-handling.middleware.js';
 // create deal
 export const createDeal = errorHandler(async (req, res, next) => {
-  const deal = await Deal.create(req.body);
+  console.log(req.user);
+  
+  const  investorId  = req.user._id;
+  const { companyId, offerDetails, status } = req.body;
+
+  const investor = await Investor.findById(investorId);
+
+  console.log(investorId,investor);
+  
+
+  if (!investor) {
+    return next(new AppError('no investor with this id', 404));
+  }
+
+  const deal = await Deal.create({
+    companyId,
+    offerDetails,
+    status,
+    investorId,
+  });
+
   res.status(201).json({
     status: 'success',
     data: {
