@@ -55,7 +55,7 @@ export const getRecomendations = errorHandler(async (req, res, next) => {
       companyResults: newSuggested.length,
       postResults: newCharityPosts.length,
       data: {
-        suggestedCompanies: newSuggested,
+        companies: newSuggested,
         posts: newCharityPosts,
       },
     });
