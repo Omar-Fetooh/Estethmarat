@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { Deal, Investor } from '../../../DB/models/index.js';
+import { Deal, Investor, Offer, requestConsultation } from '../../../DB/models/index.js';
 import { AppError } from '../../Utils/AppError.js';
 import { createTokenAndSendCookie } from '../auth/authController.js';
 import { APIFEATURES } from '../../Utils/apiFeatures.js';
@@ -224,3 +224,37 @@ export const getAllSavedProfiles = async (req, res, next) => {
     data: { savedProfiles: investor.savedProfiles },
   });
 };
+
+export const getAllNotifications = errorHandler(async (req, res, next) => {
+  const investorId = req.user.id;
+
+  const [respondedOutgoingOffers, consultations] = await Promise.all([
+    Offer.find({
+      sender: investorId,
+      senderModel: 'Investor',
+      companyResponded: true,
+    }),
+    requestConsultation.find({
+      investor: investorId,
+      investorReply: { $ne: '' },
+    }),
+  ]);
+
+  const hasUnseenOutgoing = respondedOutgoingOffers.some(
+    (offer) => offer.responseSeenBySender === false 
+  );
+  const hasUnseenConsultations = consultations.some(
+    (cons) => cons.consultaionState === false
+  );
+
+  const allSeen =
+    !hasUnseenOutgoing && !hasUnseenConsultations;
+
+  const allNotifications = [...respondedOutgoingOffers, ...consultations];
+
+  return res.status(200).json({
+    status: 'success',
+    allSeen,
+    allData: allNotifications,
+  });
+});
