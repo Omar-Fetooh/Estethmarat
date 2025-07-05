@@ -41,6 +41,8 @@ export const getRecomendations = errorHandler(async (req, res, next) => {
     }
     let posts = await Post.find({
       organizationType: 'CharityOrganization',
+    }).populate({
+      path: 'organizationId',
     });
     const charityPosts = posts.sort((a, b) => b.updatedAt - a.updatedAt);
     let newCharityPosts = [];

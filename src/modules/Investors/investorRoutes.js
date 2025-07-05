@@ -17,6 +17,7 @@ import {
   getAllInvestorsInvestedInCompany,
   saveProfile,
   getAllSavedProfiles,
+  protect,
 } from './investorController.js';
 import { uploadInvestorPhoto, imageProcessing } from '../upload.js';
 import { protect } from '../auth/authController.js';
@@ -50,4 +51,4 @@ investorRouter
   .route('/:id')
   .get(getInvestor)
   .patch(updateInvestor)
-  .delete(deleteInvestor);
+  .delete(protect, deleteInvestor);
