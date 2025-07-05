@@ -37,6 +37,7 @@ supportOrganizationRouter.get(
 
 supportOrganizationRouter.delete(
   '/:organizationId',
+  protect,
   errorHandler(deleteSupportOrganization)
 );
 

@@ -41,6 +41,7 @@ charityOrganizationRouter.get(
 
 charityOrganizationRouter.delete(
   '/:organizationId',
+  protect,
   errorHandler(deleteCharityOrganization)
 );
 
