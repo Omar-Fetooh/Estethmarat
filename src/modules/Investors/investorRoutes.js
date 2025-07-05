@@ -17,6 +17,7 @@ import {
   getAllInvestorsInvestedInCompany,
   saveProfile,
   getAllSavedProfiles,
+  getAllNotifications,
 } from './investorController.js';
 import { uploadInvestorPhoto, imageProcessing } from '../upload.js';
 import { protect } from '../auth/authController.js';
@@ -45,6 +46,7 @@ investorRouter.post(
 );
 investorRouter.route('/').get(getAllInvestors);
 investorRouter.get('/invested', getAllInvestorsInvestedInCompany);
+investorRouter.get('/getNotifications', protect, getAllNotifications);
 
 investorRouter
   .route('/:id')

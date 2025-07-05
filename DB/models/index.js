@@ -4,7 +4,6 @@ export * from './investor.model.js';
 export * from './post.model.js';
 export * from './review.model.js';
 export * from './donation.model.js';
-export * from './conslutation.model.js';
 export * from './offer.model.js';
 export * from './supportOrganization.model.js';
 export * from './charityOrganization.model.js';

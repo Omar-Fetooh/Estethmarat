@@ -216,8 +216,8 @@ export const getAllNotifications = errorHandler(async (req, res, next) => {
 
   const [incomingOffers, respondedOutgoingOffers, consultations] =
     await Promise.all([
-      Offer.find({ company: companyId }),  // بجيب الي مبعوت للشركه
-      Offer.find({ sender: companyId, companyResponded: true }),  // بجيب عروض الخدمة الي الشركة باعتاها
+      Offer.find({ company: companyId }), // بجيب الي مبعوت للشركه
+      Offer.find({ sender: companyId, companyResponded: true }), // بجيب عروض الخدمة الي الشركة باعتاها
       requestConsultation.find({
         company: companyId,
         investorReply: { $ne: '' },
@@ -228,7 +228,7 @@ export const getAllNotifications = errorHandler(async (req, res, next) => {
     (offer) => offer.companySeen === false
   );
   const hasUnseenOutgoing = respondedOutgoingOffers.some(
-    (offer) => offer.companyResponded === true && offer.senderSeen === false
+    (offer) => offer.companyResponded === true
   );
   const hasUnseenConsultations = consultations.some(
     (cons) => cons.isRepliesSeenByCompany === false
