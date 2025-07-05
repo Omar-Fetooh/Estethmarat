@@ -16,7 +16,7 @@ import { protect } from '../auth/authController.js';
 import { errorHandler } from '../../middlewares/error-handling.middleware.js';
 //get top five companies with maximum netProfit
 companyRouter.get('/top-companies', getTopCompanies);
-companyRouter.route('/').get(protect, getAllCompanies);
+companyRouter.route('/').get(getAllCompanies);
 
 companyRouter.get('/save-profile', protect, errorHandler(getAllSavedProfiles));
 companyRouter.post('/save-profile', protect, errorHandler(saveProfile));
