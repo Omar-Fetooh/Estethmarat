@@ -11,7 +11,6 @@ import {
   getTopCompanies,
   getAllSavedProfiles,
   saveProfile,
-  protect,
 } from './companyController.js';
 import { protect } from '../auth/authController.js';
 import { errorHandler } from '../../middlewares/error-handling.middleware.js';
