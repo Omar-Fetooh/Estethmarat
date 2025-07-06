@@ -18,6 +18,7 @@ import {
   saveProfile,
   getAllSavedProfiles,
   getAllNotifications,
+  markAllSeen,
 } from './investorController.js';
 import { uploadInvestorPhoto, imageProcessing } from '../upload.js';
 import { protect } from '../auth/authController.js';
@@ -37,6 +38,7 @@ export const investorRouter = Router();
 investorRouter.get('/top-investors', getTopInvestors);
 investorRouter.get('/save-profile', protect, errorHandler(getAllSavedProfiles));
 investorRouter.post('/save-profile', protect, errorHandler(saveProfile));
+investorRouter.patch('/mark-all-seen', protect, markAllSeen);
 
 investorRouter.post(
   '/register',
