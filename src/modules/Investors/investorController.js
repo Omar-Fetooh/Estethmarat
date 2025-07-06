@@ -1,5 +1,10 @@
 import jwt from 'jsonwebtoken';
-import { Deal, Investor, Offer, requestConsultation } from '../../../DB/models/index.js';
+import {
+  Deal,
+  Investor,
+  Offer,
+  requestConsultation,
+} from '../../../DB/models/index.js';
 import { AppError } from '../../Utils/AppError.js';
 import { createTokenAndSendCookie } from '../auth/authController.js';
 import { APIFEATURES } from '../../Utils/apiFeatures.js';
@@ -241,14 +246,13 @@ export const getAllNotifications = errorHandler(async (req, res, next) => {
   ]);
 
   const hasUnseenOutgoing = respondedOutgoingOffers.some(
-    (offer) => offer.responseSeenBySender === false 
+    (offer) => offer.responseSeenBySender === false
   );
   const hasUnseenConsultations = consultations.some(
     (cons) => cons.consultaionState === false
   );
 
-  const allSeen =
-    !hasUnseenOutgoing && !hasUnseenConsultations;
+  const allSeen = !hasUnseenOutgoing && !hasUnseenConsultations;
 
   const allNotifications = [...respondedOutgoingOffers, ...consultations];
 
@@ -256,5 +260,35 @@ export const getAllNotifications = errorHandler(async (req, res, next) => {
     status: 'success',
     allSeen,
     allData: allNotifications,
+  });
+});
+
+export const markAllSeen = errorHandler(async (req, res, next) => {
+  const investorId = req.user._id;
+
+  const [respondedOutgoingOffers, consultations] = await Promise.all([
+    Offer.updateMany(
+      {
+        sender: investorId,
+        senderModel: 'Investor',
+        companyResponded: true,
+        responseSeenBySender: false,
+      },
+      { $set: { responseSeenBySender: true } }
+    ),
+
+    requestConsultation.updateMany(
+      {
+        investor: investorId,
+        investorReply: { $ne: '' },
+        consultaionState: false,
+      },
+      { $set: { consultaionState: true } }
+    ),
+  ]);
+
+  res.status(200).json({
+    status: 'success',
+    message: 'All related notifications marked as seen successfully',
   });
 });
