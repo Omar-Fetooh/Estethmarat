@@ -11,6 +11,7 @@ import {
   getTopCompanies,
   getAllSavedProfiles,
   saveProfile,
+  getAllNotifications,
 } from './companyController.js';
 import { protect } from '../auth/authController.js';
 import { errorHandler } from '../../middlewares/error-handling.middleware.js';
@@ -27,6 +28,7 @@ companyRouter.post(
   imageProcessing,
   createCompany
 );
+companyRouter.get('/getNotifications', protect, getAllNotifications);
 companyRouter
   .route('/:id')
   .get(getCompany)

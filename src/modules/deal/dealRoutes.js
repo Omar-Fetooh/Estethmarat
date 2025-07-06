@@ -10,7 +10,7 @@ import {
   deleteDeal,
 } from './dealController.js';
 
-dealRouter.route('/').get(getAllDealsOfInvestor).post(createDeal);
+dealRouter.route('/').get(getAllDealsOfInvestor).post(protect,createDeal);
 
 dealRouter
   .route('/:id')

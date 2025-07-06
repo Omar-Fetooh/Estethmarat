@@ -56,7 +56,7 @@ export const getRecomendations = errorHandler(async (req, res, next) => {
       postResults: newCharityPosts.length,
       data: {
         companies: newSuggested,
-        posts: newCharityPosts,
+        newCharityPosts,
       },
     });
   }
@@ -67,7 +67,7 @@ export const getRecomendations = errorHandler(async (req, res, next) => {
     ]);
     const supportPosts = await Post.find({
       organizationType: 'SupportOrganization',
-    });
+    }).populate('organizationId');
     const supPosts = supportPosts.sort((a, b) => b.updatedAt - a.updatedAt);
     let newSupportPosts = [];
     for (let i = 0; i < supPosts.length; i++) {
@@ -77,7 +77,7 @@ export const getRecomendations = errorHandler(async (req, res, next) => {
 
     const charityPosts = await Post.find({
       organizationType: 'CharityOrganization',
-    });
+    }).populate('organizationId');
     const chaPosts = charityPosts.sort((a, b) => b.updatedAt - a.updatedAt);
     let newCharityPosts = [];
     for (let i = 0; i < chaPosts.length; i++) {
@@ -111,7 +111,9 @@ export const getRecomendations = errorHandler(async (req, res, next) => {
       { $sort: { createdAt: -1 } },
       { $limit: 9 },
     ]);
-    const posts = await Post.find({ organizationType: 'CharityOrganization' });
+    const posts = await Post.find({
+      organizationType: 'CharityOrganization',
+    }).populate('organizationId');
     const charityPosts = posts.sort((a, b) => b.updatedAt - a.updatedAt);
     let newCharityPosts = [];
     for (let i = 0; i < charityPosts.length; i++) {
