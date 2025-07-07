@@ -215,7 +215,8 @@ export const getAllNotifications = errorHandler(async (req, res, next) => {
     (offer) => offer.companySeen === false
   );
   const hasUnseenOutgoing = respondedOutgoingOffers.some(
-    (offer) => offer.companyResponded === true
+    (offer) =>
+      offer.companyResponded === true && offer.responseSeenBySender === false
   );
   const hasUnseenConsultations = consultations.some(
     (cons) => cons.isRepliesSeenByCompany === false
@@ -234,5 +235,43 @@ export const getAllNotifications = errorHandler(async (req, res, next) => {
     status: 'success',
     allSeen,
     allData: allNotifications,
+  });
+});
+
+export const markAllSeen = errorHandler(async (req, res, next) => {
+  const companyId = req.user._id;
+
+  const [incomingOffers, respondedOutgoingOffers, consultations] =
+    await Promise.all([
+      // عروض مرسلة للشركة
+      Offer.updateMany(
+        { company: companyId, companySeen: false },
+        { $set: { companySeen: true } }
+      ),
+
+      // عروض مرسلة من الشركة وردوا عليها
+      Offer.updateMany(
+        {
+          sender: companyId,
+          companyResponded: true,
+          responseSeenBySender: false,
+        },
+        { $set: { responseSeenBySender: true } }
+      ),
+
+      // طلبات استشارة من الشركة ورد عليهم المستثمر
+      requestConsultation.updateMany(
+        {
+          company: companyId,
+          investorIsReplied: true,
+          isRepliesSeenByCompany: false,
+        },
+        { $set: { isRepliesSeenByCompany: true } }
+      ),
+    ]);
+
+  res.status(200).json({
+    status: 'success',
+    message: 'All related notifications marked as seen successfully',
   });
 });

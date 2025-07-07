@@ -12,6 +12,7 @@ import {
   getAllSavedProfiles,
   saveProfile,
   getAllNotifications,
+  markAllSeen,
 } from './companyController.js';
 import { protect } from '../auth/authController.js';
 import { errorHandler } from '../../middlewares/error-handling.middleware.js';
@@ -28,6 +29,9 @@ companyRouter.post(
   imageProcessing,
   createCompany
 );
+
+companyRouter.patch('/mark-all-seen',protect,markAllSeen)
+
 companyRouter.get('/getNotifications', protect, getAllNotifications);
 companyRouter
   .route('/:id')
