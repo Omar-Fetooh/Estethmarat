@@ -168,17 +168,27 @@ export const saveProfile = async (req, res, next) => {
   }
 
   // Save the profile
-  company.savedProfiles.push({
-    profileId,
-    profileType,
-  });
+  await Company.updateOne(
+    { _id: companyId },
+    {
+      $push: {
+        savedProfiles: { profileId, profileType },
+      },
+    },
+    {
+      new: true,
+      runValidators: false,
+    }
+  );
 
-  await company.save();
+  const updatedCompany = await Company.findById(req.user._id).select(
+    'savedProfiles'
+  );
 
   res.status(200).json({
     status: 'success',
     message: 'Profile saved successfully',
-    savedProfiles: company.savedProfiles,
+    savedProfiles: updatedCompany.savedProfiles,
   });
 };
 export const getAllSavedProfiles = async (req, res, next) => {
