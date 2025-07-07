@@ -13,7 +13,10 @@ const getSearchResult = errorHandler(async (req, res, next) => {
   let userResults, arrOfPosts;
   if (name) {
     const investors = await Investor.find({
-      fullEnglishName: { $regex: name, $options: 'i' },
+      $or: [
+        { fullEnglishName: { $regex: name, $options: 'i' } },
+        { fullArabicName: { $regex: name, $options: 'i' } },
+      ],
     });
     const companies = await Company.find({
       companyName: { $regex: name, $options: 'i' },
@@ -36,14 +39,14 @@ const getSearchResult = errorHandler(async (req, res, next) => {
         $regex: name,
         $options: 'i',
       },
-    });
+    }).populate('organizationId');
   }
   if (!name) {
     const investors = await Investor.find();
     const companies = await Company.find();
     const supportOrganizations = await supportOrganization.find();
     const charityOrganizations = await CharityOrganization.find();
-    const posts = await Post.find();
+    const posts = await Post.find().populate('organizationId');
     userResults = [
       ...investors,
       ...companies,

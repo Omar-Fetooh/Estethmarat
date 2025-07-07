@@ -16,3 +16,4 @@ export * from './consultaion.model.js';
 export * from './getSupport.model.js';
 export * from './similarCompanies.model.js';
 export * from './getSupportToIncubator.model.js';
+export * from './admin.js';

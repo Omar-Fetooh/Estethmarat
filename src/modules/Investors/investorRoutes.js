@@ -39,6 +39,12 @@ investorRouter.get('/top-investors', getTopInvestors);
 investorRouter.get('/save-profile', protect, errorHandler(getAllSavedProfiles));
 investorRouter.post('/save-profile', protect, errorHandler(saveProfile));
 investorRouter.patch('/mark-all-seen', protect, markAllSeen);
+investorRouter.route('/').get(getAllInvestors);
+investorRouter
+  .route('/:id')
+  .get(getInvestor)
+  .patch(updateInvestor)
+  .delete(protect, deleteInvestor);
 
 investorRouter.post(
   '/register',
@@ -46,12 +52,5 @@ investorRouter.post(
   imageProcessing,
   register
 );
-investorRouter.route('/').get(getAllInvestors);
 investorRouter.get('/invested', getAllInvestorsInvestedInCompany);
 investorRouter.get('/getNotifications', protect, getAllNotifications);
-
-investorRouter
-  .route('/:id')
-  .get(getInvestor)
-  .patch(updateInvestor)
-  .delete(protect, deleteInvestor);

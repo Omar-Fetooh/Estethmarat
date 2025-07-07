@@ -64,6 +64,7 @@ app.use('/api/v1/support-charity', router.getSupportRouter);
 app.use('/api/v1/support-incubator', router.getSupportToIncubatorRouter);
 app.use('/api/v1/charity-notifications', router.charityNotificationsRouter);
 app.use('/api/v1/incubator-notifications', router.incubatorNotificationsRouter);
+app.use('/api/v1/admin', router.adminRouter);
 
 app.use(
   '/api/v1/charity-open-notifications',

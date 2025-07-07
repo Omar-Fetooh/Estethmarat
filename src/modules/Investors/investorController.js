@@ -1,14 +1,12 @@
 import jwt from 'jsonwebtoken';
-import {
-  Deal,
-  Investor,
-  Offer,
-  requestConsultation,
-} from '../../../DB/models/index.js';
 import { AppError } from '../../Utils/AppError.js';
 import { createTokenAndSendCookie } from '../auth/authController.js';
 import { APIFEATURES } from '../../Utils/apiFeatures.js';
 import { errorHandler } from '../../middlewares/error-handling.middleware.js';
+import { requestConsultation } from '../../../DB/models/consultaion.model.js';
+import { Deal } from '../../../DB/models/deal.model.js';
+import { Investor } from '../../../DB/models/investor.model.js';
+import { Offer } from '../../../DB/models/offer.model.js';
 
 // investor register
 export const register = errorHandler(async (req, res, next) => {
@@ -52,7 +50,19 @@ export const getAllInvestors = errorHandler(async (req, res, next) => {
 
 // get investor based on id
 export const getInvestor = errorHandler(async (req, res, next) => {
+  console.log(req.params.id);
   const investor = await Investor.findById(req.params.id);
+  console.log(investor);
+  const investments = await Deal.find({
+    investorId: investor._id,
+    status: 'Completed',
+  });
+
+  const consultations = await requestConsultation.find({
+    investor: investor._id,
+    investorIsReplied: true,
+  });
+
   if (!investor)
     return next(
       new AppError(`there in no investor with that id (${req.params.id})`, 404)
@@ -61,6 +71,8 @@ export const getInvestor = errorHandler(async (req, res, next) => {
     status: 'success',
     data: {
       investor,
+      investments: investments.length,
+      consultations: consultations.length,
     },
   });
 });

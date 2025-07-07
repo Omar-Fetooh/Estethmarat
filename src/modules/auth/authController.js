@@ -14,6 +14,7 @@ import { Investor } from '../../../DB/models/investor.model.js';
 import { Company } from '../../../DB/models/company.model.js';
 import { CharityOrganization } from '../../../DB/models/charityOrganization.model.js';
 import { supportOrganization } from '../../../DB/models/supportOrganization.model.js';
+import { Admin } from '../../../DB/models/admin.js';
 
 import { sendEmail } from '../../Utils/sendEmail.js';
 import { decode } from 'punycode';
@@ -158,6 +159,7 @@ export const login = errorHandler(async (req, res, next) => {
     { mod: Investor },
     { mod: CharityOrganization },
     { mod: supportOrganization },
+    { mod: Admin },
   ];
   let returnedModel;
   await Promise.all(
