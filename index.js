@@ -62,6 +62,17 @@ app.use('/api/v1/request-consultaion', router.consultationRouter);
 app.use('/api/v1/reply-consultation', router.consultationRouterReplies);
 app.use('/api/v1/support-charity', router.getSupportRouter);
 app.use('/api/v1/support-incubator', router.getSupportToIncubatorRouter);
+app.use('/api/v1/charity-notifications', router.charityNotificationsRouter);
+app.use('/api/v1/incubator-notifications', router.incubatorNotificationsRouter);
+
+app.use(
+  '/api/v1/charity-open-notifications',
+  router.charityOpenedNotificationsRouter
+);
+app.use(
+  '/api/v1/incubator-open-notifications',
+  router.incubatorOpenedNotificationsRouter
+);
 app.get('/', (req, res) => res.send('Welcome in Estethmarat!'));
 const server = app.listen(port, () =>
   console.log(`Example app listening on port ${port}!`)

@@ -21,3 +21,7 @@ export * from './consultation/consultation.Routes.js';
 export * from './consultationReplies/consultationReplies.routes.js';
 export * from './getSupporting/getSupport.routes.js';
 export * from './getSupportByIncubators/getSupportToIncubators.routes.js';
+export * from './charity-notifications/charity-notifications.routes.js';
+export * from './incubator-notifications/incubator-notifications.routes.js';
+export * from './charit-open-notifications/charity-open-notifications.routes.js';
+export * from './incubator-open-Notifications/incubator-open-notifications.routes.js';
